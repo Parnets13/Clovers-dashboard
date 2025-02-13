@@ -1,0 +1,36 @@
+.member-list-table-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 20px;
+  }
+  
+  .member-list-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .member-list-table th, .member-list-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+  }
+  
+  .member-list-table th {
+    text-align: left;
+    color: var(--secondary-text);
+    font-weight: normal;
+  }
+  
+  .action-link {
+    margin-right: 10px;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+  
+  .action-link:hover {
+    text-decoration: underline;
+  }
+  

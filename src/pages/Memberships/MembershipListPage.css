@@ -1,0 +1,208 @@
+/* Main container: Sidebar and Content */
+.memberships-container {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: "#f9f9f9";
+  }
+  
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  
+  /* Header Section */
+  .memberships-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .memberships-header h2 {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .memberships-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .input-group {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .search-input,
+  .filter-select {
+    padding: 10px 12px 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #fff;
+  }
+  
+  /* Ensures the parent container allows visibility */
+.go-to-guests {
+  display: flex;
+  justify-content: flex-end; /* Align button to the right */
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative; /* Relative positioning */
+  z-index: 10; /* Brings it above other elements */
+}
+
+/* Button Base Styles */
+.primary-button {
+    background-color: #c5a48a !important; /* Solid Primary Blue */
+    color: #ffffff !important; /* White text */
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Hover State */
+  .primary-button:hover {
+    background-color: #c5a48a !important; /* Slightly Darker Blue */
+    color: #ffffff !important; /* Ensure text stays white */
+    transform: translateY(-0.5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Active (Click) State */
+  .primary-button:active {
+    background-color: #c5a48a !important; /* Even Darker Blue */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+  }
+    
+  /* Overview Cards */
+  .cards-overview {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .card {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .card-icon {
+    font-size: 2.5rem;
+    color: #c5a48a;
+  }
+  
+  .card h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .card p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+/* Outer Container for the Table */
+.member-list-table-container {
+    background-color: #ffffff; /* White background */
+    border-radius: 8px; /* Smooth edges */
+    padding: 16px; /* Internal padding for spacing */
+    margin-top: 20px;
+    overflow-x: auto; /* Ensure table responsiveness */
+  }
+  
+  /* Table Styling */
+  .member-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  
+  .member-list-table th,
+  .member-list-table td {
+    padding: 10px 12px; /* Cell padding */
+    border-bottom: 1px solid #e0e0e0; /* Light horizontal lines */
+  }
+  
+  .member-list-table th {
+    text-align: left;
+    font-weight: 600;
+    color: #555; /* Darker text for headers */
+    background-color: #f9f9f9; /* Light gray background for headers */
+  }
+  
+  .member-list-table tr:nth-child(even) {
+    background-color: #f8f8f8; /* Alternate row color */
+  }
+  
+  .member-list-table tr:hover {
+    background-color: #f1f9ff; /* Subtle hover effect */
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-link {
+    margin-right: 10px;
+    font-size: 0.85rem;
+    color: #c5a48a; /* Accent color */
+    text-decoration: none;
+  }
+  
+  .action-link:hover {
+    text-decoration: underline;
+  }
+  
+  .renewal-table-wrapper {
+    margin-top: 20px;
+  }
+  
+  .renewal-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .renewal-table th,
+  .renewal-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .renewal-table th {
+    background-color: #f5f5f5;
+    text-align: left;
+  }
+  

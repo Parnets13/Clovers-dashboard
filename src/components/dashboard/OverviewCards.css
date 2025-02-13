@@ -1,0 +1,8 @@
+.overview-cards-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Spacing for better alignment */
+    padding: 20px; /* Add padding */
+  }
+  

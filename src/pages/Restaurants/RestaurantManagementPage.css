@@ -1,0 +1,94 @@
+.restaurant-management-container {
+  display: flex;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.restaurant-management-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-management-content h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.view-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6c757d;
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.view-menu-button:hover {
+  background-color: #5a6268;
+  transform: scale(1.05);
+}
+
+.view-menu-icon {
+  margin-right: 8px;
+}
+
+.form-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+}
+
+.form-container h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-group input,
+.form-group select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #ffffff;
+}
+
+.primary-button {
+  background-color: #28a745;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.primary-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}

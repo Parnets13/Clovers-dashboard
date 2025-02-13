@@ -1,0 +1,19 @@
+.member-detail-container {
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .member-detail-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .member-detail-content h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  

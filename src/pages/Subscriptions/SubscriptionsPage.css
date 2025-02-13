@@ -1,0 +1,29 @@
+.subscriptions-container {
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .subscriptions-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .subscriptions-content h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .subscriptions-content p {
+    font-size: 0.95rem;
+    color: var(--secondary-text);
+  }
+  
+  .subscriptions-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  

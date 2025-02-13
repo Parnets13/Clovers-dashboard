@@ -1,0 +1,29 @@
+.restaurants-overview-container {
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .restaurants-overview-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .restaurants-overview-content h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .restaurants-overview-content p {
+    font-size: 0.95rem;
+    color: var(--secondary-text);
+  }
+  
+  .restaurants-buttons {
+    display: flex;
+    gap: 20px;
+  }
+  

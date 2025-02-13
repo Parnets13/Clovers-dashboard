@@ -1,0 +1,38 @@
+.facility-management-table-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 20px;
+  }
+  
+  .facility-management-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .facility-management-table th,
+  .facility-management-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+  }
+  
+  .facility-management-table th {
+    text-align: left;
+    color: var(--secondary-text);
+  }
+  
+  .action-link {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 0.85rem;
+  }
+  
+  .action-link:hover {
+    text-decoration: underline;
+  }
+  

@@ -1,0 +1,102 @@
+/* Sidebar container */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #f9f9f9;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+.sidebar-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .logo-image {
+    width: 150px; /* Adjust size as needed */
+    height: auto;
+    object-fit: contain;
+  }
+  
+  
+  /* Sidebar menu */
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+  }
+  
+  /* Sidebar menu items */
+  .sidebar-menu li {
+    margin: 15px 0;
+  }
+  
+  .sidebar-menu li a {
+    text-decoration: none;
+    color: #555;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: color 0.3s, background 0.3s;
+  }
+  
+  .sidebar-menu li a:hover {
+    background-color: #eaf3ff;
+    color: #c5a48a;
+    border-left: 4px solid #c5a48a;
+    padding-left: 16px;
+  }
+  
+  /* Active menu item */
+  .sidebar-menu li a.active {
+    color: #c5a48a;
+    border-left: 4px solid #c5a48a;
+    background-color: #eaf3ff;
+    padding-left: 16px;
+  }
+  
+  /* Help option */
+  .sidebar-help {
+    margin-top: auto;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  .sidebar-help a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .sidebar-help a:hover {
+    color: #c5a48a;
+  }
+
+  /* Sidebar icons */
+.menu-icon {
+    margin-right: 10px;
+    font-size: 18px; /* Adjust size of icons */
+    color: inherit; /* Match text color */
+  }
+
+  .ant-menu-item-selected {
+    background-color: #c5a48a !important; /* Change the background color */
+    color: #fff !important; /* Change the text color */
+  }
+  
+  .ant-menu-item-active {
+    background-color: #f3ddcb !important; /* Hover color */
+  }
+  
+  .ant-menu-submenu-selected > .ant-menu-submenu-title {
+   
+    color: #c5a48a !important;           /* Blue text */
+    /* font-weight: bold !important;       */
+  }

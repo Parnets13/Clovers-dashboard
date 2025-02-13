@@ -1,0 +1,172 @@
+.view-menu-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .menu-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .menu-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .menu-button {
+    background-color: #d4a373; /* Replace with your desired color */
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .menu-button.active {
+    background-color: #c08563; /* Highlight color for active button */
+    transform: scale(1.1);
+  }
+  
+  .menu-button:hover {
+    background-color: #c08563; /* Slightly darker hover color */
+    transform: translateY(-2px);
+  }
+  
+  
+  .menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .menu-subcategory {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .subcategory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .menu-item:last-child {
+    border-bottom: none;
+  }
+  
+  .item-name {
+    font-weight: 500;
+  }
+  
+  .item-price {
+    margin-right: 10px;
+    color: #555;
+  }
+  
+  .delete-button,
+  .delete-item-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover,
+  .delete-item-button:hover {
+    background-color: #c82333;
+  }
+
+  .menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .menu-table tr {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px;
+  }
+  
+  .menu-table th,
+  .menu-table td {
+    text-align: center;
+    padding: 12px;
+  }
+  
+  .menu-table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+  }
+  
+  .menu-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #dc3545;
+    font-size: 16px;
+  }
+  
+  .icon-button:hover {
+    color: #c82333;
+  }
+  
+  .delete-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .primary-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #c82333;
+  }
+  

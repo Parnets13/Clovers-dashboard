@@ -1,0 +1,107 @@
+/* Container */
+.room-management-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .room-management-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .room-management-actions {
+    margin-bottom: 20px;
+  }
+  
+  .primary-button {
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #155bb5;
+    transform: translateY(-2px);
+  }
+  
+  /* Table Container */
+  .room-table-container {
+    overflow-x: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .room-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .room-table thead tr {
+    background-color: #f1f1f1;
+    font-weight: bold;
+  }
+  
+  .room-table th,
+  .room-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .room-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .status-dropdown {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .action-button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .action-button.edit {
+    background-color: #1a73e8;
+    color: #fff;
+  }
+  
+  .action-button.edit:hover {
+    background-color: #155bb5;
+  }
+  
+  .action-button.delete {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+  
+  .action-button.delete:hover {
+    background-color: #c0392b;
+  }
+  

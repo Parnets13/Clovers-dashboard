@@ -1,0 +1,30 @@
+.facilities-overview-container {
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .facilities-overview-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .facilities-overview-content h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .facilities-overview-content p {
+    font-size: 0.95rem;
+    color: var(--secondary-text);
+  }
+  
+  .facilities-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  

@@ -1,0 +1,24 @@
+.guest-cards-container {
+    display: flex;
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .guest-cards-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .guest-cards-content h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .guest-cards-actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
