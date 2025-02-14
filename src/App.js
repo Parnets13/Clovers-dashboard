@@ -36,6 +36,7 @@ import Payroll from "./pages/Employee/Payroll";
 import FeesAndCharges from "./pages/Employee/FeesAndCharges";
 import DiscountsAndPromotions from "./pages/Memberships/DiscountsAndPromotions";
 import MemberDashboard from "./pages/Members.js/MemberDashboard";
+import Admin from "./pages/Admin/Admin";
 
 const App = () => {
   return (
@@ -124,6 +125,7 @@ const App = () => {
               element={<DiscountsAndPromotions />}
             />
             <Route path='/members' element={<MemberDashboard/>}/>
+            <Route path='/admin' element={<Admin/>}/>
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFoundPage />} />

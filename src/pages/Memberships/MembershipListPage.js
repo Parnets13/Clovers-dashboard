@@ -169,27 +169,6 @@ const [nochabgesdata,setnochangesdata]=useState([]);
           <div className="memberships-header">
             <h2>Membership Management</h2>
             <div className="memberships-actions">
-              <div className="input-group">
-                <FaSearch className="input-icon" />
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search by name..."
-                  onChange={(e)=>filterData(e.target.value)}
-                />
-              </div>
-              <div className="input-group">
-                <FaFilter className="input-icon" />
-                <select className="filter-select" onChange={(e)=>filetrBytype(e.target.value)}>
-                  <option value="">All Types</option>
-                  <option value="life">Life</option>
-                  <option value="platinum">Platinum</option>
-                  <option value="senior">Senior</option>
-                  <option value="corporate">Corporate</option>
-                  <option value="temporary">Temporary</option>
-                  <option value="guest">Guest</option>
-                </select>
-              </div>
               <button
                 className="primary-button"
                 onClick={() => navigate('/memberships/create')}

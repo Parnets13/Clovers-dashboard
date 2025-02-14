@@ -137,7 +137,7 @@ const Inventory = () => {
    <div className="dashboard-container">
        <div className="main-content">
             <div style={{ padding: 20 }}>
-              <Button className="menu-button" icon={<PlusOutlined />} onClick={showInventoryModal}>
+              <Button className="primary-button" icon={<PlusOutlined />} onClick={showInventoryModal}>
                 Add Inventory
               </Button>
               <Button onClick={handleExport} style={{ marginLeft: 10 }}>

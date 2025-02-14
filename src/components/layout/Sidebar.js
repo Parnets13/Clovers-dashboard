@@ -237,13 +237,15 @@ const Sidebar = () => {
           </Menu.Item>
         </Menu.SubMenu>
 
-        <Menu.SubMenu
-          key="Members"
-          icon={<UserOutlined />}
-          title="Members"
-        >
+        <Menu.SubMenu key="Members" icon={<UserOutlined />} title="Members">
           <Menu.Item key="member" icon={<UserOutlined />}>
             <Link to="/members">Members Management</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
+
+        <Menu.SubMenu key="Admin" icon={<UserOutlined />} title="Admin">
+          <Menu.Item key="admin" icon={<UserOutlined />}>
+            <Link to="/admin">Admin</Link>
           </Menu.Item>
         </Menu.SubMenu>
 

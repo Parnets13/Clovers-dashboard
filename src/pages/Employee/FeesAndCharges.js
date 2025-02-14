@@ -122,7 +122,7 @@ const FeesAndCharges = () => {
     <div className="view-menu-container">
       <div className="main-content">
         <div>
-          <Button className="menu-button" icon={<PlusOutlined />} onClick={showModal}>
+          <Button className="primary-button" icon={<PlusOutlined />} onClick={showModal}>
             Generate Invoice
           </Button>
           <Button onClick={handleExport} style={{ marginLeft: 10 }}>

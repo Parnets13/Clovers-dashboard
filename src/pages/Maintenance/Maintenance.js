@@ -88,7 +88,7 @@ const Maintenance = () => {
   return (
     <div className="main-content">
       <div style={{ padding: 20 }}>
-        <Button className="menu-button" icon={<PlusOutlined />} onClick={showModal}>
+        <Button className="primary-button" icon={<PlusOutlined />} onClick={showModal}>
           Add Maintenance Task
         </Button>
         <Table dataSource={maintenanceTasks} columns={columns} style={{ marginTop: 20 }} />

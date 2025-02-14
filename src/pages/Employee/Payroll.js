@@ -104,7 +104,7 @@ const Payroll = () => {
     <div className="view-menu-container">
       <div className="main-content">
         <div>
-          <Button className="menu-button" icon={<PlusOutlined />} onClick={showModal}>
+          <Button className="primary-button" icon={<PlusOutlined />} onClick={showModal}>
             Add Payroll
           </Button>
           <Table dataSource={payrollRecords} columns={columns} style={{ marginTop: 20 }} />
