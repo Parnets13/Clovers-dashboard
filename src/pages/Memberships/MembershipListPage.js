@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/layout/Sidebar';
-import Topbar from '../../components/layout/Topbar';
-import { FaSearch, FaFilter, FaEdit } from 'react-icons/fa';
-import './MembershipListPage.css';
-import { MdDelete } from 'react-icons/md';
-import { toast } from 'sonner';
-import { FaDeleteLeft } from 'react-icons/fa6';
-import axios from 'axios';
-import _ from 'lodash';
-import { Button, Modal, Space } from 'antd';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/layout/Sidebar";
+import Topbar from "../../components/layout/Topbar";
+import { FaSearch, FaFilter, FaEdit } from "react-icons/fa";
+import "./MembershipListPage.css";
+import { MdDelete } from "react-icons/md";
+import { toast } from "sonner";
+import { FaDeleteLeft } from "react-icons/fa6";
+import axios from "axios";
+import _ from "lodash";
+import { Button, Modal, Space } from "antd";
 
 const MembershipListPage = () => {
   const navigate = useNavigate();
@@ -18,19 +18,19 @@ const MembershipListPage = () => {
 
   // State to hold all renewal records fetched from the backend
   const [renewals, setRenewals] = useState([]);
-const [nochabgesdata,setnochangesdata]=useState([]);
+  const [nochabgesdata, setnochangesdata] = useState([]);
 
   const fetchRenewals = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/memberships');
+      const response = await fetch("http://localhost:8000/api/memberships");
       if (!response.ok) {
-        throw new Error('Failed to fetch renewals');
+        throw new Error("Failed to fetch renewals");
       }
       const data = await response.json();
       setRenewals(data);
-      setnochangesdata(data)
+      setnochangesdata(data);
     } catch (error) {
-      console.error('Error fetching renewals:', error);
+      console.error("Error fetching renewals:", error);
     }
   };
   // Fetch the renewals when the component mounts
@@ -38,16 +38,15 @@ const [nochabgesdata,setnochangesdata]=useState([]);
     fetchRenewals();
   }, []);
 
- 
   // Open QR Modal
 
   const [AllBenifits, setAllbenifits] = useState([]);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    title: "",
+    description: "",
     benefits: AllBenifits,
-    price: '',
-    membershipday: '',
+    price: "",
+    membershipday: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -57,19 +56,19 @@ const [nochabgesdata,setnochangesdata]=useState([]);
 
   const AddBenifits = () => {
     if (!benefit) {
-      errors.benefits = 'Please enter benefit.';
+      errors.benefits = "Please enter benefit.";
     }
     let check = AllBenifits.find((ele) => ele == benefit);
-    if (check) return errors.benefits = 'Already exits.';
+    if (check) return (errors.benefits = "Already exits.");
     setAllbenifits([...AllBenifits, benefit]);
-    errors.benefits = ""
+    errors.benefits = "";
     setBenefits("");
-  }
+  };
 
   const remove = (i) => {
-    setAllbenifits(AllBenifits.filter((ele) => ele !== i))
-    toast.success("Successfully delete!")
-  }
+    setAllbenifits(AllBenifits.filter((ele) => ele !== i));
+    toast.success("Successfully delete!");
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,13 +77,14 @@ const [nochabgesdata,setnochangesdata]=useState([]);
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = 'Membership title is required.';
     if (!formData.membershipday || Number(formData.membershipday) <= 0)
-      errors.membershipday = 'Enter valid membership days.';
-    if (!formData.description.trim()) errors.description = 'Description is required.';
-    if (!AllBenifits.length) errors.benefits = 'Provide at least one benefit.';
-    if (!formData.price || Number(formData.price) <= 0) errors.price = 'Enter a valid price.';
-    if (!formData.type) errors.type = 'Select membership type.';
+      errors.membershipday = "Enter valid membership days.";
+    if (!formData.description.trim())
+      errors.description = "Description is required.";
+    if (!AllBenifits.length) errors.benefits = "Provide at least one benefit.";
+    if (!formData.price || Number(formData.price) <= 0)
+      errors.price = "Enter a valid price.";
+    if (!formData.type) errors.type = "Select membership type.";
 
     setErrors(errors);
     // alert(Object.keys(errors).length === 0)
@@ -95,89 +95,105 @@ const [nochabgesdata,setnochangesdata]=useState([]);
     if (!validateForm()) return;
 
     try {
-      const response = await axios.put('http://localhost:8000/api/memberships/' + formData._id, {
-        ...formData,
-        benefits: AllBenifits,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.put(
+        "http://localhost:8000/api/memberships/" + formData._id,
+        {
+          ...formData,
+          benefits: AllBenifits,
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 200) {
-        setIsModalOpen(false)
+        setIsModalOpen(false);
         toast.success("Successfully updated");
         fetchRenewals();
       }
     } catch (error) {
-      console.error('Error creating membership:', error);
+      console.error("Error creating membership:", error);
       if (error.response) {
-        toast.error(error.response.data.errors)
+        toast.error(error.response.data.errors);
       } else {
-        toast.error("Something went wrong")
+        toast.error("Something went wrong");
       }
     }
   };
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete('http://localhost:8000/api/memberships/' + formData._id);
+      const response = await axios.delete(
+        "http://localhost:8000/api/memberships/" + formData._id
+      );
       if (response.status == 200) {
         toast.success("Successfully deleted");
         setdeltemodel(false);
-        fetchRenewals()
+        fetchRenewals();
       }
     } catch (error) {
       console.log(error);
       if (error.response) {
-        toast.error(error.response.data.errors)
+        toast.error(error.response.data.errors);
       } else {
-        toast.error("Something went wrong")
+        toast.error("Something went wrong");
       }
     }
-  }
+  };
 
-  const filetrBytype=(data)=>{
-    if(data){
-      setRenewals(nochabgesdata.filter((ele)=>ele.type==data))
-    }else{
+  const filetrBytype = (data) => {
+    if (data) {
+      setRenewals(nochabgesdata.filter((ele) => ele.type == data));
+    } else {
       setRenewals([...nochabgesdata]);
     }
-  }
+  };
 
   const filterData = (query) => {
     const filteredData = query
-      ? _.filter(nochabgesdata, item =>
-          _.some(item, value =>
+      ? _.filter(nochabgesdata, (item) =>
+          _.some(item, (value) =>
             _.toString(value).toLowerCase().includes(query.toLowerCase())
           )
         )
       : nochabgesdata;
-  
+
     // Update the state with the filtered data
     setRenewals(filteredData);
   };
 
+  const [data, setData] = useState([]);
+  const getBenefit = async () => {
+    const res = await axios.get("http://localhost:8000/api/benefit/get");
+    setData(res.data.data);
+  };
+
+  useEffect(() => {
+    getBenefit();
+  }, []);
+
   return (
     <div className="memberships-container">
-   
       <div className="main-content">
-
-
         <div className="memberships-content">
           {/* Header Section */}
           <div className="memberships-header">
             <h2>Membership Management</h2>
-            <div className="memberships-actions">
+            <div className="memberships-actions flex items-center gap-3">
               <button
                 className="primary-button"
-                onClick={() => navigate('/memberships/create')}
+                onClick={() => navigate("/memberships/create")}
               >
                 New Membership
               </button>
-              {/* <button className="primary-button" onClick={handleViewGuestCards}>
-                Guest Cards
-              </button> */}
+              <button
+                className="primary-button"
+                onClick={() => navigate("/memberships/benefits")}
+              >
+                Benefits
+              </button>
             </div>
           </div>
 
@@ -190,7 +206,6 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                   <th>S.N</th>
                   <th>Title</th>
                   <th>Membership Days</th>
-                  <th>Membership Type</th>
                   <th>Price</th>
                   <th>Description</th>
                   <th>Benefits</th>
@@ -203,14 +218,20 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                   renewals.map((renewal, i) => (
                     <tr key={renewal._id}>
                       <td>{i + 1}</td>
-                      <td>{renewal.name}</td>
-                      <td>{renewal.membershipday}</td>
                       <td>{renewal.type}</td>
+                      <td>{renewal.membershipday}</td>
+                      {/* <td>{renewal.type}</td> */}
                       <td>{renewal.price?.toFixed(2)}</td>
                       <td>{renewal.description}</td>
-                      <td>{renewal.benefits?.map((ele, e) => {
-                        return <p>{e + 1}. {ele}</p>
-                      })}</td>
+                      <td>
+                        {renewal.benefits?.map((ele, e) => {
+                          return (
+                            <p>
+                              {e + 1}. {ele}
+                            </p>
+                          );
+                        })}
+                      </td>
                       <td>{new Date(renewal.createdAt).toLocaleString()}</td>
                       <td>
                         {/* Button to view QR code in a modal */}
@@ -219,15 +240,15 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                             className="qr-button"
                             onClick={() => {
                               setAllbenifits(renewal.benefits);
-                              setFormData(renewal)
-                              setIsModalOpen(true)
+                              setFormData(renewal);
+                              setIsModalOpen(true);
                             }}
                             style={{
                               color: "#C5A48A",
                               border: "none",
                               borderRadius: "50px",
                               padding: "7px 9px",
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                           >
                             <FaEdit size={20} />
@@ -238,24 +259,25 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                               border: "none",
                               borderRadius: "50px",
                               padding: "7px 9px",
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                             onClick={() => {
-                              setdeltemodel(true)
-                              setFormData(renewal)
+                              setdeltemodel(true);
+                              setFormData(renewal);
                             }}
                             className="qr-button"
                           >
                             <MdDelete size={20} />
                           </button>
                         </div>
-
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className='text-center'>No membership found.</td>
+                    <td colSpan="9" className="text-center">
+                      No membership found.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -272,9 +294,11 @@ const [nochabgesdata,setnochangesdata]=useState([]);
           cancelText="Cancel"
           okButtonProps={{ danger: true }}
         >
-          <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+          <p>
+            Are you sure you want to delete this item? This action cannot be
+            undone.
+          </p>
         </Modal>
-
 
         {/* Simple Modal for QR Code */}
         {isModalOpen && (
@@ -283,7 +307,9 @@ const [nochabgesdata,setnochangesdata]=useState([]);
             <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl h-[600px] overflow-y-scroll">
               {/* Modal Header */}
               <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 ">
-                <h2 className="text-2xl font-semibold text-gray-800">Update Membership Plan</h2>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Update Membership Plan
+                </h2>
                 <button
                   className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md "
                   onClick={() => setIsModalOpen(false)}
@@ -295,7 +321,12 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -304,25 +335,33 @@ const [nochabgesdata,setnochangesdata]=useState([]);
               <div className="p-6">
                 <form className="space-y-6">
                   {/* Membership Title */}
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      Membership Title
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
+                  <div className="form-group">
+                    <label htmlFor="type">Membership Title</label>
+                    <select
+                      name="type"
+                      value={formData.type}
                       onChange={handleChange}
-                      placeholder="e.g. Monthly Plan"
-                      className={`mt-1 block w-full px-4 py-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500`}
-                    />
-                    {errors.name && <small className="text-red-500">{errors.name}</small>}
+                      className={errors.type ? "error" : ""}
+                    >
+                      <option value="">Select type...</option>
+                      <option value="life">Life</option>
+                      <option value="platinum">Platinum</option>
+                      <option value="senior">Senior</option>
+                      <option value="corporate">Corporate</option>
+                      <option value="temporary">Temporary</option>
+                      <option value="guest">Guest</option>
+                    </select>
+                    {errors.type && (
+                      <small className="error-text">{errors.type}</small>
+                    )}
                   </div>
 
                   {/* Membership Days */}
                   <div>
-                    <label htmlFor="membershipday" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="membershipday"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Membership Days
                     </label>
                     <input
@@ -332,15 +371,25 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                       onChange={handleChange}
                       placeholder="e.g. 30"
                       min="1"
-                      className={`mt-1 block w-full px-4 py-2 border ${errors.membershipday ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`mt-1 block w-full px-4 py-2 border ${
+                        errors.membershipday
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500`}
                     />
-                    {errors.membershipday && <small className="text-red-500">{errors.membershipday}</small>}
+                    {errors.membershipday && (
+                      <small className="text-red-500">
+                        {errors.membershipday}
+                      </small>
+                    )}
                   </div>
 
                   {/* Description */}
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="description"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Description
                     </label>
                     <textarea
@@ -348,39 +397,58 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                       value={formData.description}
                       onChange={handleChange}
                       placeholder="Provide a brief description of the membership."
-                      className={`mt-1 block w-full px-4 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'
-                        } rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`mt-1 block w-full px-4 py-2 border ${
+                        errors.description
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500`}
                     />
-                    {errors.description && <small className="text-red-500">{errors.description}</small>}
+                    {errors.description && (
+                      <small className="text-red-500">
+                        {errors.description}
+                      </small>
+                    )}
                   </div>
 
                   {/* Benefits */}
                   <div className="form-group">
-                    <label htmlFor="benefits">Benefits (add one by one)</label>
-                    <div>
-                      <input
-                        type="text"
-                        name="benefits"
-                        value={benefit}
-                        onChange={(e) => setBenefits(e.target.value)}
-                        placeholder="enter benfit"
-                        min="1"
-                        className={errors.benefits ? 'error' : ''}
-                      />
-                      {errors.benefits && (
-                        <small className="text-red-500">{errors.benefits}</small>
-                      )}
+                    <div className="form-group">
+                      <label htmlFor="benefits">Benefits </label>
+                      <select onChange={(e) => setBenefits(e.target.value)}>
+                        <option value="">Select Benefit</option>
+                        {data.map((benefit, index) => (
+                          <option value={benefit.name} key={index}>
+                            {benefit.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-
-                    <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" onClick={() => AddBenifits()}>Add</button>
+                    {errors.benefits && (
+                      <small className="error-text">{errors.benefits}</small>
+                    )}
+                    <button
+                      type="button"
+                      class="py-2.5 px-5 me-2  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                      onClick={() => AddBenifits()}
+                    >
+                      Add
+                    </button>
                   </div>
                   {AllBenifits.map((ele, i) => {
                     return (
-                      <div className='flex justify-around mb-5'>
-                        <p>{i + 1}. {ele}</p>
-                        <p className='cursor-pointer' title='remove'><FaDeleteLeft color='red' size={20} onClick={() => remove(ele)} /></p>
+                      <div className="flex justify-around mb-5">
+                        <p>
+                          {i + 1}. {ele}
+                        </p>
+                        <p className="cursor-pointer" title="remove">
+                          <FaDeleteLeft
+                            color="red"
+                            size={20}
+                            onClick={() => remove(ele)}
+                          />
+                        </p>
                       </div>
-                    )
+                    );
                   })}
                   {/* Price */}
                   <div className="form-group">
@@ -393,9 +461,11 @@ const [nochabgesdata,setnochangesdata]=useState([]);
                       onChange={handleChange}
                       placeholder="e.g. 200"
                       min="1"
-                      className={errors.price ? 'error' : ''}
+                      className={errors.price ? "error" : ""}
                     />
-                    {errors.price && <small className="text-red-500">{errors.price}</small>}
+                    {errors.price && (
+                      <small className="text-red-500">{errors.price}</small>
+                    )}
                   </div>
                   {/* Submit Button */}
                   <button
@@ -410,7 +480,6 @@ const [nochabgesdata,setnochangesdata]=useState([]);
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

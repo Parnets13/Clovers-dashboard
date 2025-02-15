@@ -37,6 +37,7 @@ import FeesAndCharges from "./pages/Employee/FeesAndCharges";
 import DiscountsAndPromotions from "./pages/Memberships/DiscountsAndPromotions";
 import MemberDashboard from "./pages/Members.js/MemberDashboard";
 import Admin from "./pages/Admin/Admin";
+import Benefit from "./pages/Memberships/Benefit";
 
 const App = () => {
   return (
@@ -50,10 +51,13 @@ const App = () => {
             <Route index element={<DashboardPage />} />
             {/* Membership Routes */}
             <Route path="/memberships" element={<MembershipListPage />} />
+            <Route path="/memberships/benefits" element={<Benefit />} />
+
             <Route
               path="/memberships/create"
               element={<CreateMembershipPage />}
             />
+            
             <Route path="/memberships/detail" element={<MemberDetailPage />} />
             <Route path="/memberships/guests" element={<GuestCardsPage />} />
             <Route

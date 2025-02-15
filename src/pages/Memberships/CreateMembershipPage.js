@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/layout/Sidebar";
 import Topbar from "../../components/layout/Topbar";
@@ -6,14 +6,14 @@ import "./CreateMembershipPage.css";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
+import { IoMdArrowRoundBack } from "react-icons/io";
 const CreateMembershipPage = () => {
   const [formData, setFormData] = useState({
-    name: "",
     description: "",
     price: "",
-    type: "",
     membershipday: "",
     age: 0,
+    type: "",
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -22,8 +22,6 @@ const CreateMembershipPage = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  set
 
   const [AllBenifits, setAllbenifits] = useState([]);
   const [benefit, setBenefits] = useState("");
@@ -41,7 +39,7 @@ const CreateMembershipPage = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = "Membership title is required.";
+    // if (!formData.name.trim()) errors.name = "Membership title is required.";
     if (!formData.membershipday || Number(formData.membershipday) <= 0)
       errors.membershipday = "Enter valid membership days.";
     if (!formData.description.trim())
@@ -63,6 +61,8 @@ const CreateMembershipPage = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("first");
+
     if (!validateForm()) return;
     // alert("colling")
     try {
@@ -78,6 +78,8 @@ const CreateMembershipPage = () => {
           },
         }
       );
+
+      console.log(response);
 
       if (response.status === 201) {
         toast.success("Successfully created");
@@ -98,9 +100,25 @@ const CreateMembershipPage = () => {
     toast.success("Successfully delete!");
   };
 
+  const [data, setData] = useState([]);
+
+  const getBenefit = async () => {
+    const res = await axios.get("http://localhost:8000/api/benefit/get");
+    setData(res.data.data);
+  };
+
+  console.log("first", formData.type);
+
+  useEffect(() => {
+    getBenefit();
+  }, []);
+
   return (
     <div className="member-detail-content">
       <div className="main-content">
+        <div className="absolute flex items-center gap-2 cursor-pointer" onClick={() => navigate(-1)}>
+          <IoMdArrowRoundBack /> Back
+        </div>
         <div className="create-membership-page">
           <div className="form-wrapper">
             <h2>Create New Membership Plan</h2>
@@ -126,20 +144,6 @@ const CreateMembershipPage = () => {
                   <small className="error-text">{errors.type}</small>
                 )}
               </div>
-              {/* <div className="form-group">
-                <label htmlFor="name">Membership Title</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="e.g. Monthly Plan"
-                  className={errors.name ? "error" : ""}
-                />
-                {errors.name && (
-                  <small className="error-text">{errors.name}</small>
-                )}
-              </div> */}
 
               {/* Membership Days */}
               <div className="form-group">
@@ -175,23 +179,23 @@ const CreateMembershipPage = () => {
 
               {/* Benefits */}
               <div className="form-group">
-                <label htmlFor="benefits">Benefits (add one by one)</label>
-
-                <input
-                  type="text"
-                  name="benefits"
-                  value={benefit}
-                  onChange={(e) => setBenefits(e.target.value)}
-                  placeholder="enter benfit"
-                  min="1"
-                  className={errors.benefits ? "error" : ""}
-                />
+                <div className="form-group">
+                  <label htmlFor="benefits">Benefits </label>
+                  <select onChange={(e) => setBenefits(e.target.value)}>
+                    <option value="">Select Benefit</option>
+                    {data.map((benefit, index) => (
+                      <option value={benefit.name} key={index}>
+                        {benefit.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {errors.benefits && (
                   <small className="error-text">{errors.benefits}</small>
                 )}
                 <button
                   type="button"
-                  class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  class="py-2.5 px-5 me-2 mb-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                   onClick={() => AddBenifits()}
                 >
                   Add
