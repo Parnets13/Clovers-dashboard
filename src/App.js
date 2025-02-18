@@ -38,6 +38,8 @@ import DiscountsAndPromotions from "./pages/Memberships/DiscountsAndPromotions";
 import MemberDashboard from "./pages/Members.js/MemberDashboard";
 import Admin from "./pages/Admin/Admin";
 import Benefit from "./pages/Memberships/Benefit";
+import BarInventory from "./pages/Inventory/BarInventory";
+import RestaurantInventory from "./pages/Inventory/RestaurantInventory";
 
 const App = () => {
   return (
@@ -57,7 +59,7 @@ const App = () => {
               path="/memberships/create"
               element={<CreateMembershipPage />}
             />
-            
+
             <Route path="/memberships/detail" element={<MemberDetailPage />} />
             <Route path="/memberships/guests" element={<GuestCardsPage />} />
             <Route
@@ -106,7 +108,8 @@ const App = () => {
             />
             <Route path="/restaurants/view-menu" element={<ViewMenuPage />} />
 
-            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/bar-inventory" element={<BarInventory />} />
+            <Route path="/restaurant-inventory" element={<RestaurantInventory />} />
             <Route path="/maintainance" element={<Maintenance />} />
 
             {/* Bar Routes */}
@@ -128,8 +131,8 @@ const App = () => {
               path="/discount&promotion"
               element={<DiscountsAndPromotions />}
             />
-            <Route path='/members' element={<MemberDashboard/>}/>
-            <Route path='/admin' element={<Admin/>}/>
+            <Route path="/members" element={<MemberDashboard />} />
+            <Route path="/admin" element={<Admin />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFoundPage />} />

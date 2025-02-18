@@ -8,6 +8,8 @@ import axios from "axios";
 import "./ViewMenuPage.css";
 import { Modal, Button, Form, Input, message, Menu } from "antd";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const ViewMenuPage = () => {
   const [menuData, setMenuData] = useState([]);
@@ -168,19 +170,33 @@ const ViewMenuPage = () => {
         <div className="view-menu-content">
           <h2 className="menu-title">Restaurant Menu</h2>
 
-          <div className="menu-buttons">
-            <button className="menu-button" onClick={() => setBtn("Category")}>
-              Category
-            </button>
-            <button
-              className="menu-button"
-              onClick={() => setBtn("SubCategory")}
-            >
-              Sub-Category
-            </button>
-            <button className="menu-button" onClick={() => setBtn("MenuItems")}>
-              Menu Items
-            </button>
+          <div className="flex justify-between items-center">
+            <div className="menu-buttons">
+              <button
+                className="menu-button"
+                onClick={() => setBtn("Category")}
+              >
+                Category
+              </button>
+              <button
+                className="menu-button"
+                onClick={() => setBtn("SubCategory")}
+              >
+                Sub-Category
+              </button>
+              <button
+                className="menu-button"
+                onClick={() => setBtn("MenuItems")}
+              >
+                Menu Items
+              </button>
+            </div>
+
+            <div>
+              <Link to="/restaurants/management">
+                <button className="primary-button">Add Menu Item</button>
+              </Link>
+            </div>
           </div>
 
           {btn === "Category" ? (
@@ -294,48 +310,79 @@ const ViewMenuPage = () => {
           {btn === "MenuItems" && (
             <div className="menu-container px-5">
               {category.map((item, index) => (
-                <div key={index} className="category-section border border-gray-500 mt-5">
+                <div
+                  key={index}
+                  className="category-section border border-gray-500 mt-5"
+                >
                   <h3 className="mt-3 px-3 ">
-                    <span className="font-semibold">{index + 1}. Category-</span> <strong>{item.category}</strong>
+                    <span className="font-semibold">
+                      {index + 1}. Category-
+                    </span>{" "}
+                    <strong>{item.category}</strong>
                   </h3>
                   {item.subCategories.map((subCategory, subIndex) => (
-                    <div key={subCategory._id} className="subcategory-section mt-2">
+                    <div
+                      key={subCategory._id}
+                      className="subcategory-section mt-2 "
+                    >
                       <h4 className="px-6">
-                        <span className="font-semibold">{subIndex + 1}. Sub-Category-</span> <strong>{subCategory.name}</strong>
+                        <span className="font-semibold">
+                          {subIndex + 1}. Sub-Category-
+                        </span>
+                        <strong>{subCategory.name}</strong>
                       </h4>
                       {subCategory.items.map((menuItem, itemIndex) => (
-                        <div key={menuItem._id} className="item-section ml-4 flex items-center gap-2 px-9">
-                        <div className="flex items-center gap-5">
-                            
-                              {itemIndex + 1}. {menuItem.name} - ₹{menuItem.price}
-                           <div className="flex items-center gap-1">
-                                <BiEdit
-                                  className="text-blue-500 ml-2"
-                                  // onClick={() =>
-                                  //   handleEditItemClick(menuItem, subCategory)
-                                  // }
-                                />
-                                <FiDelete
-                                  className="text-red-500 ml-2"
-                                  // onClick={() =>
-                                  //   handleItemDelete(menuItem._id, subCategory._id)
-                                  // }
-                                />
-                           </div>
-                            
-                        </div>
-                          {menuItem.measures && menuItem.measures.length > 0 && (
-                            <ul>
-                              {menuItem.measures.map((measure) => (
-                                <li key={measure._id}>
-                                  {measure.measure} - ₹{measure.price}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                        <div
+                          key={menuItem._id}
+                          className="item-section ml-4 flex items-center gap-2 px-9"
+                        >
+                          <div className="flex flex-col items-start gap-1">
+                            <p className="flex items-center gap-2">
+                              {itemIndex + 1}.
+                              <span className="font-semibold w-40">
+                                {menuItem.name} - ₹{menuItem.price}
+                              </span>
+                            </p>
+                            <div className="flex justify-start items-start gap-5">
+                              <img
+                                src={`http://localhost:8000/menu/${menuItem.image}`}
+                                alt=""
+                                className="w-40 rounded-md"
+                              />
+                              <p className="">
+                                <span className="font-semibold">
+                                  Description:
+                                </span>
+                                {menuItem.description}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1 mt-4 mb-4">
+                              <BiEdit
+                                className="text-blue-500 ml-2"
+                                // onClick={() =>
+                                //   handleEditItemClick(menuItem, subCategory)
+                                // }
+                              />
+                              <FiDelete
+                                className="text-red-500 ml-2"
+                                // onClick={() =>
+                                //   handleItemDelete(menuItem._id, subCategory._id)
+                                // }
+                              />
+                            </div>
+                          </div>
+                          {menuItem.measures &&
+                            menuItem.measures.length > 0 && (
+                              <ul>
+                                {menuItem.measures.map((measure) => (
+                                  <li key={measure._id}>
+                                    {measure.measure} - ₹{measure.price}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                         </div>
                       ))}
-                     
                     </div>
                   ))}
                 </div>

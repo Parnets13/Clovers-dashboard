@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { Menu } from "antd";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
@@ -98,7 +96,8 @@ const Sidebar = () => {
           title="Restaurants"
         >
           <Menu.Item key="restum" icon={<MdManageHistory />}>
-            <Link to="/restaurants/management">Add Management</Link>
+            {/* <Link to="/restaurants/management">Add Management</Link> */}
+            <Link to="/restaurants/view-menu">Add Management</Link>
           </Menu.Item>
           <Menu.Item key="restu" icon={<MdOutlineRestartAlt />}>
             <Link to="/restaurants"> Restaurants</Link>
@@ -119,9 +118,19 @@ const Sidebar = () => {
         {/* <Menu.Item key="user-list" icon={<ContainerOutlined />}>
           <Link to="/applications">User List</Link>
         </Menu.Item> */}
-        <Menu.Item key="inventory" icon={<BarsOutlined />}>
-          <Link to="/inventory">Inventory</Link>
-        </Menu.Item>
+
+        <Menu.SubMenu key="inventory" icon={<BarsOutlined />} title="Inventory">
+          <Menu.Item key="barinventory" icon={<BarsOutlined />}>
+            <Link to="/bar-inventory">Bar Inventory</Link>
+          </Menu.Item>
+          <Menu.Item key="restaurantinventory" icon={<BarsOutlined />}>
+            <Link to="/restaurant-inventory">Restaurant Inventory</Link>
+          </Menu.Item>
+          <Menu.Item key="facilityinventory" icon={<BarsOutlined />}>
+            <Link to="/inventory">Facility Inventory</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
+
         <Menu.Item key="maintainance" icon={<BarsOutlined />}>
           <Link to="/maintainance">maintainance</Link>
         </Menu.Item>

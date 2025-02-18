@@ -5,6 +5,7 @@ import Topbar from "../../components/layout/Topbar";
 import "./RestaurantManagementPage.css";
 import { FaEye } from "react-icons/fa";
 import { toast } from "sonner";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const capitalizeFirstLetter = (str) => {
   return str
@@ -22,8 +23,9 @@ const RestaurantManagementPage = () => {
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
   const [measures, setMeasures] = useState([]);
-  const [description, setDescription] = useState([]);
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/menu")
@@ -105,48 +107,102 @@ const RestaurantManagementPage = () => {
       .catch((err) => console.error("Error adding subcategory:", err));
   };
 
+  
+  // const handleAddItem = () => {
+  //   const formattedItemName = capitalizeFirstLetter(newItemName.trim());
+
+  //   if (!selectedCategory || !selectedSubCategory || !formattedItemName) {
+  //     alert("Please select a category, subcategory, and enter item details.");
+  //     return;
+  //   }
+
+  //   if (!newItemPrice && measures.length === 0) {
+  //     alert("Please provide either a single price or multiple measures.");
+  //     return;
+  //   }
+
+  //   if (!selectedImage) {
+  //     alert("Please provide  an image.");
+  //     return;
+  //   }
+
+  //   const itemData = {
+  //     name: formattedItemName,
+  //     description: description.trim(),
+  //     ...(measures.length > 0
+  //       ? {
+  //           measures: measures.map((m) => ({
+  //             ...m,
+  //             price: parseFloat(m.price),
+  //           })),
+  //         } // Ensure measures have correct price format
+  //       : { price: parseFloat(newItemPrice) }), // Ensure single price is a number
+  //       image: selectedImage,
+  //   };
+
+  //   console.log("Sending item data:", itemData); // Debugging
+
+  //   fetch(
+  //     `http://localhost:8000/api/menu/${selectedCategory}/subcategory/${selectedSubCategory}/item`,
+  //     {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(itemData),
+  //     }
+  //   )
+  //     .then((res) => res.json())
+  //     .then((updatedCategory) => {
+  //       console.log("Response received:", updatedCategory); // Debugging
+  //       setMenuData((prev) =>
+  //         prev.map((cat) =>
+  //           cat._id === updatedCategory._id ? updatedCategory : cat
+  //         )
+  //       );
+
+  //       setNewItemName("");
+  //       setNewItemPrice("");
+  //       setMeasures([]);
+  //       setDescription(""); // Clear description
+  //       toast.success("Menu Item Added Successfully!!!");
+  //     })
+  //     .catch((err) => console.error("Error adding item:", err));
+  // };
+
+
   const handleAddItem = () => {
     const formattedItemName = capitalizeFirstLetter(newItemName.trim());
+  
     if (!selectedCategory || !selectedSubCategory || !formattedItemName) {
       alert("Please select a category, subcategory, and enter item details.");
       return;
     }
-
-    // Check if either price or measures are provided
+  
     if (!newItemPrice && measures.length === 0) {
       alert("Please provide either a single price or multiple measures.");
       return;
     }
-
-    const selectedCat = menuData.find((cat) => cat._id === selectedCategory);
-    const selectedSubCat = selectedCat?.subCategories.find(
-      (subCat) => subCat._id === selectedSubCategory
-    );
-
-    if (
-      selectedSubCat &&
-      selectedSubCat.items.some(
-        (item) => item.name.toLowerCase() === formattedItemName.toLowerCase()
-      )
-    ) {
-      alert("Item already exists.");
+  
+    if (!selectedImage) {
+      alert("Please upload an image.");
       return;
     }
-
-    // Prepare the item data to be sent to the backend
-    const itemData = {
-      name: formattedItemName,
-      ...(measures.length > 0
-        ? { measures } // Use measures if provided
-        : { price: parseFloat(newItemPrice) }), // Otherwise, use single price
-    };
-
+  
+    const formData = new FormData();
+    formData.append("name", formattedItemName);
+    formData.append("description", description.trim());
+    formData.append("image", selectedImage); // Append the image
+  
+    if (measures.length > 0) {
+      formData.append("measures", JSON.stringify(measures)); // Convert measures to JSON string
+    } else {
+      formData.append("price", parseFloat(newItemPrice)); // Ensure it's a number
+    }
+  
     fetch(
       `http://localhost:8000/api/menu/${selectedCategory}/subcategory/${selectedSubCategory}/item`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(itemData),
+        body: formData, // No need to set `Content-Type` manually
       }
     )
       .then((res) => res.json())
@@ -156,20 +212,27 @@ const RestaurantManagementPage = () => {
             cat._id === updatedCategory._id ? updatedCategory : cat
           )
         );
-        console.log("newItemPrice", newItemName);
-
+  
         setNewItemName("");
         setNewItemPrice("");
-        setMeasures([]); // Clear measures
-
-        toast.success("Menu Items Added Successfully!!!");
+        setMeasures([]);
+        setDescription("");
+        setSelectedImage(null);
+        toast.success("Menu Item Added Successfully!!!");
       })
       .catch((err) => console.error("Error adding item:", err));
   };
-
+  
+  
   return (
     <div className="restaurant-management-container">
       <div className="main-content">
+        <div
+          className="absolute flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate(-1)}
+        >
+          <IoMdArrowRoundBack /> Back
+        </div>
         <div className="restaurant-management-content">
           <h2>Restaurant Management</h2>
           <button
@@ -256,6 +319,18 @@ const RestaurantManagementPage = () => {
                 onChange={(e) => setNewItemPrice(e.target.value)}
                 placeholder="Enter item price (or leave blank if using measures)"
               />
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter description"
+              />
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setSelectedImage(e.target.files[0])}
+              />
 
               {/* Add measures dynamically */}
               <div className="measures-container">
@@ -287,13 +362,6 @@ const RestaurantManagementPage = () => {
                       placeholder="Enter price"
                     />
 
-                    <input
-                      type="text"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Enter description"
-                    />
-
                     <button
                       onClick={() =>
                         setMeasures((prev) =>
@@ -314,7 +382,6 @@ const RestaurantManagementPage = () => {
                 </button>
               </div>
 
-              
               <button className="primary-button" onClick={handleAddItem}>
                 Add Item
               </button>
