@@ -145,26 +145,9 @@ const MembershipListPage = () => {
     }
   };
 
-  const filetrBytype = (data) => {
-    if (data) {
-      setRenewals(nochabgesdata.filter((ele) => ele.type == data));
-    } else {
-      setRenewals([...nochabgesdata]);
-    }
-  };
 
-  const filterData = (query) => {
-    const filteredData = query
-      ? _.filter(nochabgesdata, (item) =>
-          _.some(item, (value) =>
-            _.toString(value).toLowerCase().includes(query.toLowerCase())
-          )
-        )
-      : nochabgesdata;
 
-    // Update the state with the filtered data
-    setRenewals(filteredData);
-  };
+ 
 
   const [data, setData] = useState([]);
   const getBenefit = async () => {
