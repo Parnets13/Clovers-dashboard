@@ -77,10 +77,10 @@ const Sidebar = () => {
             key="facilitiesmanagement"
             icon={<MdOutlineSportsEsports />}
           >
-            <Link to="/facilities/management">Facility Management</Link>
+            <Link to="/facilities/management">Event Management</Link>
           </Menu.Item>
           <Menu.Item key="facilitybookings" icon={<BuildOutlined />}>
-            <Link to="/facilities/bookings">Facility Bookings</Link>
+            <Link to="/facilities/bookings">Event Bookings</Link>
           </Menu.Item>
           <Menu.Item key="roommangement" icon={<MdHotel />}>
             <Link to="/facilities/room-management">Room Management</Link>
@@ -96,28 +96,21 @@ const Sidebar = () => {
           title="Restaurants"
         >
           <Menu.Item key="restum" icon={<MdManageHistory />}>
-            {/* <Link to="/restaurants/management">Add Management</Link> */}
-            <Link to="/restaurants/view-menu">Add Management</Link>
+            <Link to="/restaurants/view-menu">Menu Management</Link>
           </Menu.Item>
-          <Menu.Item key="restu" icon={<MdOutlineRestartAlt />}>
-            <Link to="/restaurants"> Restaurants</Link>
-          </Menu.Item>
-
           <Menu.Item key="restub" icon={<TbBrandBooking />}>
             <Link to="/restaurants/orders">Bookings</Link>
           </Menu.Item>
         </Menu.SubMenu>
 
-        {/* <Menu.Item key="restaurants" icon={<BuildOutlined />}>
-                    <Link to="/restaurants">Restaurants</Link>
-                </Menu.Item> */}
-
-        <Menu.Item key="bar" icon={<BuildOutlined />}>
-          <Link to="/bar">Bar</Link>
-        </Menu.Item>
-        {/* <Menu.Item key="user-list" icon={<ContainerOutlined />}>
-          <Link to="/applications">User List</Link>
-        </Menu.Item> */}
+        <Menu.SubMenu key="bar" icon={<BuildOutlined />} title="Bar">
+          <Menu.Item key="barm" icon={<MdManageHistory />}>
+            <Link to="/bar/view-menu">Bar Management</Link>
+          </Menu.Item>
+          <Menu.Item key="barb" icon={<TbBrandBooking />}>
+            <Link to="/bar">Bookings</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
 
         <Menu.SubMenu key="inventory" icon={<BarsOutlined />} title="Inventory">
           <Menu.Item key="barinventory" icon={<BarsOutlined />}>
@@ -127,7 +120,7 @@ const Sidebar = () => {
             <Link to="/restaurant-inventory">Restaurant Inventory</Link>
           </Menu.Item>
           <Menu.Item key="facilityinventory" icon={<BarsOutlined />}>
-            <Link to="/inventory">Facility Inventory</Link>
+            <Link to="/maintainance-inventory">Facility Inventory</Link>
           </Menu.Item>
         </Menu.SubMenu>
 

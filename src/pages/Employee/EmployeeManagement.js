@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Table, Button, Modal, Form, Input } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Modal, Form, Input, Upload, message } from "antd";
 import Sidebar from "../../components/layout/Sidebar";
 import Topbar from "../../components/layout/Topbar";
+import axios from "axios";
+import { render } from "@testing-library/react";
 
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
@@ -18,6 +20,20 @@ const EmployeeManagement = () => {
     setCurrentEmployee(employee);
     setModalType("edit");
     setIsModalVisible(true);
+    form.setFieldsValue(
+      {
+        name:employee.name ,
+        email:employee.email,
+        address:employee.address,
+        phone:employee.phone ,
+        position:employee.position ,
+        panNo:employee.panNo,
+        aadharNo:employee.aadharNo ,
+        accountNo:employee.accountNo,
+        ifsc:employee.ifsc,
+        bank:employee.bank
+      }
+    ); // ✅ Pre-fill form with previous values
   };
 
   const showDeleteModal = (employee) => {
@@ -26,19 +42,99 @@ const EmployeeManagement = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = (values) => {
-    if (modalType === "add") {
-      setEmployees([...employees, values]);
-    } else if (modalType === "edit") {
-      setEmployees(
-        employees.map((emp) => (emp.key === currentEmployee.key ? values : emp))
-      );
-    } else if (modalType === "delete") {
-      setEmployees(employees.filter((emp) => emp.key !== currentEmployee.key));
+  const [form] = Form.useForm();
+
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+
+      const formData = new FormData();
+
+      if (modalType === "add") {
+        Object.entries(values).forEach(([key, value]) => {
+          if (value) formData.append(key, value);
+        });
+
+        // Handle file uploads
+        if (values.photo && values.photo[0]?.originFileObj) {
+          formData.append("photo", values.photo[0].originFileObj);
+        }
+        if (values.aadharPhoto && values.aadharPhoto[0]?.originFileObj) {
+          formData.append("aadharPhoto", values.aadharPhoto[0].originFileObj);
+        }
+        if (values.panPhoto && values.panPhoto[0]?.originFileObj) {
+          formData.append("panPhoto", values.panPhoto[0].originFileObj);
+        }
+        await axios.post("http://localhost:8000/api/employee/add", formData);
+        message.success("Employee added successfully!");
+        getEmployees(); // Refresh the employee list after adding a new employee
+      } else if (modalType === "edit" && currentEmployee) {
+        // Append only selected files for editing
+        if (values.photo?.[0]?.originFileObj) {
+          formData.append("photo", values.photo[0].originFileObj);
+        }
+        if (values.aadharPhoto?.[0]?.originFileObj) {
+          formData.append("aadharPhoto", values.aadharPhoto[0].originFileObj);
+        }
+        if (values.panPhoto?.[0]?.originFileObj) {
+          formData.append("panPhoto", values.panPhoto[0].originFileObj);
+        }
+
+        if (
+          formData.has("photo") ||
+          formData.has("aadharPhoto") ||
+          formData.has("panPhoto")
+        ) {
+          await axios.put(
+            `http://localhost:8000/api/employee/update/${currentEmployee._id}`,
+            formData
+          );
+          message.success("Files updated successfully!");
+          getEmployees();
+        } else {
+          message.info("No new files uploaded.");
+        }
+        message.success("Employee updated successfully!");
+
+      
+      }
+
+      setIsModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("Operation failed!");
     }
-    setIsModalVisible(false);
-    setCurrentEmployee(null);
   };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/employee/delete/${currentEmployee._id}`
+      );
+      message.success("Employee deleted successfully!");
+      setIsModalVisible(false);
+      getEmployees();
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+      message.error("Failed to delete employee.");
+    }
+  };
+
+  const getEmployees = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/employee/get"
+      );
+      setEmployees(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -46,6 +142,12 @@ const EmployeeManagement = () => {
   };
 
   const columns = [
+    {
+      title: "Sl No",
+      dataIndex: "slNo",
+      key: "slNo",
+      render: (text, record, index) => index + 1,
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -62,6 +164,11 @@ const EmployeeManagement = () => {
       key: "email",
     },
     {
+      title: "EmployeId ",
+      dataIndex: "employeeId",
+      key: "employeeId",
+    },
+    {
       title: "Address ",
       dataIndex: "address",
       key: "address",
@@ -70,6 +177,67 @@ const EmployeeManagement = () => {
       title: "Position ",
       dataIndex: "position",
       key: "position",
+    },
+    {
+      title: "Pan No ",
+      dataIndex: "panNo",
+      key: "panNo",
+    },
+    {
+      title: "Aadhar No ",
+      dataIndex: "aadharNo",
+      key: "aadharNo",
+    },
+    {
+      title: "Bank",
+      dataIndex: "bank",
+      key: "bank",
+    },
+    {
+      title: "Account No ",
+      dataIndex: "aadharNo",
+      key: "aadharNo",
+    },
+    {
+      title: "IFSC Code",
+      dataIndex: "ifsc",
+      key: "ifsc",
+    },
+    {
+      title: "Photo",
+      dataIndex: "photo",
+      key: "photo",
+      render: (text, record) => (
+        <img
+          src={`http://localhost:8000/employee/${record.photo}`}
+          alt="Photo"
+          style={{ width: "100px" }}
+        />
+      ),
+    },
+    {
+      title: "Aadhar Photo",
+      dataIndex: "aadharPhoto",
+      key: "aadharPhoto",
+      render: (text, record) => (
+        <img
+          src={`http://localhost:8000/employee/${record.aadharPhoto}`}
+          alt="Aadhar Photo"
+          style={{ width: "100px" }}
+        />
+      ),
+    },
+    {
+      title: "Pan Photo",
+      dataIndex: "panPhoto",
+      key: "panPhoto",
+      render: (text, record) => (
+        <img
+          src={`http://localhost:8000/employee/${record.panPhoto}`}
+          alt="Pan Photo"
+          style={{ width: "100px" }}
+        />
+      ),
     },
     {
       title: "Actions",
@@ -83,129 +251,6 @@ const EmployeeManagement = () => {
     },
   ];
 
-  const employeesDta = [
-    {
-      key: 1,
-      name: "John Doe",
-      position: "Software Engineer",
-      phone: "123-456-7890",
-      address: "123 Main St, Bengaluru",
-      attendance: "95%",
-      shift: "9 AM - 5 PM",
-      salary: "₹1,200,000",
-      taxProcessing: "₹150,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 2,
-      name: "Jane Smith",
-      position: "Product Manager",
-      phone: "987-654-3210",
-      address: "456 Elm St, Bengaluru",
-      attendance: "98%",
-      shift: "10 AM - 6 PM",
-      salary: "₹1,500,000",
-      taxProcessing: "₹180,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 3,
-      name: "Alice Johnson",
-      position: "UI/UX Designer",
-      phone: "456-789-1230",
-      address: "789 Oak St, Bengaluru",
-      attendance: "92%",
-      shift: "11 AM - 7 PM",
-      salary: "₹1,000,000",
-      taxProcessing: "₹120,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 4,
-      name: "Bob Brown",
-      position: "Data Scientist",
-      phone: "654-321-9870",
-      address: "321 Pine St, Bengaluru",
-      attendance: "97%",
-      shift: "9 AM - 5 PM",
-      salary: "₹1,800,000",
-      taxProcessing: "₹220,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 5,
-      name: "Charlie Davis",
-      position: "DevOps Engineer",
-      phone: "789-123-4560",
-      address: "654 Maple St, Bengaluru",
-      attendance: "93%",
-      shift: "10 AM - 6 PM",
-      salary: "₹1,300,000",
-      taxProcessing: "₹160,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 6,
-      name: "Diana Evans",
-      position: "Marketing Specialist",
-      phone: "321-987-6540",
-      address: "987 Cedar St, Bengaluru",
-      attendance: "94%",
-      shift: "11 AM - 7 PM",
-      salary: "₹900,000",
-      taxProcessing: "₹110,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 7,
-      name: "Frank Green",
-      position: "Sales Manager",
-      phone: "567-890-1234",
-      address: "123 Birch St, Bengaluru",
-      attendance: "96%",
-      shift: "9 AM - 5 PM",
-      salary: "₹1,400,000",
-      taxProcessing: "₹170,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 8,
-      name: "Grace Harris",
-      position: "Customer Support",
-      phone: "890-123-4567",
-      address: "456 Redwood St, Bengaluru",
-      attendance: "95%",
-      shift: "10 AM - 6 PM",
-      salary: "₹800,000",
-      taxProcessing: "₹100,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 9,
-      name: "Henry Jackson",
-      position: "HR Manager",
-      phone: "234-567-8901",
-      address: "789 Willow St, Bengaluru",
-      attendance: "97%",
-      shift: "11 AM - 7 PM",
-      salary: "₹1,600,000",
-      taxProcessing: "₹200,000",
-      payslip: "URL_TO_PDF",
-    },
-    {
-      key: 10,
-      name: "Isla Kelly",
-      position: "Finance Analyst",
-      phone: "567-123-8904",
-      address: "321 Spruce St, Bengaluru",
-      attendance: "94%",
-      shift: "9 AM - 5 PM",
-      salary: "₹1,100,000",
-      taxProcessing: "₹140,000",
-      payslip: "URL_TO_PDF",
-    },
-  ];
-
   return (
     <div className="">
       <div className="dashboard-container">
@@ -214,7 +259,8 @@ const EmployeeManagement = () => {
             <Button className="primary-button w-40" onClick={showAddModal}>
               Add Employee
             </Button>
-            <Table dataSource={employeesDta} columns={columns} rowKey="key" />
+            <Table dataSource={employees} columns={columns} rowKey="key" />
+
             <Modal
               title={`${
                 modalType.charAt(0).toUpperCase() + modalType.slice(1)
@@ -224,55 +270,169 @@ const EmployeeManagement = () => {
               footer={null}
             >
               <Form
+                form={form}
                 onFinish={handleOk}
-                initialValues={currentEmployee || { key: Date.now() }}
+                initialValues={currentEmployee || {}}
               >
                 {modalType !== "delete" ? (
                   <>
-                    <Form.Item name="key" hidden>
-                      <Input />
-                    </Form.Item>
                     <Form.Item
                       name="name"
                       label="Name"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Enter employee Employee Name",
-                        },
-                      ]}
+                      rules={[{ required: true }]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       name="phone"
-                      label="Phone Number"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Enter Employee Phone Number",
-                        },
-                      ]}
+                      label="Phone"
+                      rules={[{ required: true }]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       name="email"
                       label="Email"
-                      rules={[
-                        { required: true, message: "Enter Employee Email" },
-                      ]}
+                      rules={[{ required: true }]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      name="email"
-                      label="Adddress"
-                      rules={[
-                        { required: true, message: "Enter Employee Address" },
-                      ]}
+                      name="address"
+                      label="Address"
+                      rules={[{ required: true }]}
                     >
                       <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="position"
+                      label="Position"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="panNo"
+                      label="Pan No"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="aadharNo"
+                      label="Aadhar No"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="bank"
+                      label="Bank"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="accountNo"
+                      label="Account No"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="ifsc"
+                      label="IFSC Code"
+                      rules={[{ required: true }]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    {/* <Form.Item
+                      name="photo"
+                      label="Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e?.fileList || [];
+                      }}
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Photo</Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item
+                      name="aadharPhoto"
+                      label="Aadhar Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e?.fileList || [];
+                      }}
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Aadhar Photo</Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item
+                      name="panPhoto"
+                      label="Pan Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e?.fileList || [];
+                      }}
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Pan Photo</Button>
+                      </Upload>
+                    </Form.Item> */}
+
+                    <Form.Item
+                      name="photo"
+                      label="Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) =>
+                        e?.fileList ? [...e.fileList] : []
+                      }
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Photo</Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item
+                      name="aadharPhoto"
+                      label="Aadhar Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) =>
+                        e?.fileList ? [...e.fileList] : []
+                      }
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Aadhar Photo</Button>
+                      </Upload>
+                    </Form.Item>
+
+                    <Form.Item
+                      name="panPhoto"
+                      label="Pan Photo"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) =>
+                        e?.fileList ? [...e.fileList] : []
+                      }
+                    >
+                      <Upload beforeUpload={() => false} listType="picture">
+                        <Button>Upload Pan Photo</Button>
+                      </Upload>
                     </Form.Item>
                   </>
                 ) : (

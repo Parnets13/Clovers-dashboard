@@ -150,7 +150,7 @@ const FacilityBookingTable = ({ data, getAllBooking, members, AllFacility }) => 
         <Descriptions column={1} bordered>
           {/* Member */}
           <Descriptions.Item label="Member">
-            {viewData?.memberId?.name || "N/A"}
+            {viewData?.memberId?.Member_Name || "N/A"}
           </Descriptions.Item>
 
           {/* Facility */}
@@ -272,7 +272,7 @@ const FacilityBookingTable = ({ data, getAllBooking, members, AllFacility }) => 
             <Select placeholder="Select a member">
               {members?.map((member) => (
                 <Option key={member._id} value={member._id}>
-                  {member.name}
+                  {member.Member_Name}
                 </Option>
               ))}
             </Select>

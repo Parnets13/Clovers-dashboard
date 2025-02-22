@@ -171,7 +171,7 @@ const RoomBookingsPage = () => {
             <Select placeholder="Select a member">
               {members?.map((member) => (
                 <Option key={member._id} value={member._id}>
-                  {member.name}
+                  {member.Member_Name}-{member.Membership_No}
                 </Option>
               ))}
             </Select>

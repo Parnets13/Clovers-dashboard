@@ -14,6 +14,7 @@ const CreateMembershipPage = () => {
     membershipday: "",
     age: 0,
     type: "",
+    discount: "",
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -48,6 +49,8 @@ const CreateMembershipPage = () => {
       errors.benefits = "Provide at least one benefit.";
     if (!formData.price || Number(formData.price) <= 0)
       errors.price = "Enter a valid price.";
+    if (!formData.discount || Number(formData.discount) <= 0)
+      errors.discount = "Enter a valid discount.";
     // if (!formData.type) errors.type = "Select membership type.";
     if (
       formData.type === "senior" &&
@@ -116,7 +119,10 @@ const CreateMembershipPage = () => {
   return (
     <div className="member-detail-content">
       <div className="main-content">
-        <div className="absolute flex items-center gap-2 cursor-pointer" onClick={() => navigate(-1)}>
+        <div
+          className="absolute flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate(-1)}
+        >
           <IoMdArrowRoundBack /> Back
         </div>
         <div className="create-membership-page">
@@ -133,7 +139,7 @@ const CreateMembershipPage = () => {
                   className={errors.type ? "error" : ""}
                 >
                   <option value="">Select type...</option>
-                  <option value="life">Life</option>
+                  <option value="lifetime">Life</option>
                   <option value="platinum">Platinum</option>
                   <option value="senior">Senior</option>
                   <option value="corporate">Corporate</option>
@@ -254,6 +260,23 @@ const CreateMembershipPage = () => {
                   )}
                 </div>
               )}
+
+              {/* Discount */}
+              <div className="form-group">
+                <label htmlFor="discount">Discount (in %)</label>
+                <input
+                  type="number"
+                  name="discount"
+                  value={formData.discount}
+                  onChange={handleChange}
+                  placeholder="e.g. 10"
+                  min="1"
+                  className={errors.discount ? "error" : ""}
+                />
+                {errors.discount && (
+                  <small className="error-text">{errors.discount}</small>
+                )}
+              </div>
 
               {/* Submit Button */}
               <button

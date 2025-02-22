@@ -10,106 +10,66 @@ import {
   notification,
   DatePicker,
 } from "antd";
+import axios from "axios";
 
 const { Option } = Select;
 
 const BarInventory = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inventory, setInventory] = useState([]);
 
-  const dummyData = [
-    {
-      _id: "1",
-      itemName: "Jack Daniel's Old No. 7",
-      category: "Liquor",
-      brand: "Jack Daniel's",
-      volume: 750,
-      unit: "ml",
-      pricePerUnit: 2000,
-      stockQuantity: 50,
-      minStockThreshold: 10,
-      supplierName: "ABC Liquor Suppliers",
-      supplierContact: "+91-1234567890",
-      supplierEmail: "contact@abcliquors.com",
-      supplierAddress: "123 Main Street, Bengaluru, Karnataka",
-      lastStockUpdate: "2025-02-17T09:51:48.235Z",
-      purchaseHistory: [
-        {
-          date: "2025-01-15T10:00:00.000Z",
-          quantityAdded: 30,
-          cost: 60000,
-        },
-        {
-          date: "2025-02-10T10:00:00.000Z",
-          quantityAdded: 20,
-          cost: 40000,
-        },
-      ],
-      usageLogs: [
-        {
-          date: "2025-02-15T10:00:00.000Z",
-          quantityUsed: 5,
-          purpose: "Sale",
-        },
-        {
-          date: "2025-02-16T10:00:00.000Z",
-          quantityUsed: 2,
-          purpose: "Spillage",
-        },
-      ],
-      status: "Available",
-    },
-    {
-      _id: "2",
-      itemName: "Heineken Lager",
-      category: "Beer",
-      brand: "Heineken",
-      volume: 330,
-      unit: "ml",
-      pricePerUnit: 150,
-      stockQuantity: 100,
-      minStockThreshold: 20,
-      supplierName: "XYZ Beer Distributors",
-      supplierContact: "+91-9876543210",
-      supplierEmail: "sales@xyzbeer.com",
-      supplierAddress: "456 Market Road, Bengaluru, Karnataka",
-      lastStockUpdate: "2025-02-17T09:51:48.235Z",
-      purchaseHistory: [
-        {
-          date: "2025-01-20T10:00:00.000Z",
-          quantityAdded: 50,
-          cost: 7500,
-        },
-        {
-          date: "2025-02-12T10:00:00.000Z",
-          quantityAdded: 50,
-          cost: 7500,
-        },
-      ],
-      usageLogs: [
-        {
-          date: "2025-02-16T10:00:00.000Z",
-          quantityUsed: 10,
-          purpose: "Sale",
-        },
-      ],
-      status: "Available",
-    },
-  ];
-
+  const getAllInventoryitems = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/barInventory/get");
+      if (res.status == 200) {
+        setData(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    setData(dummyData);
+    getAllInventoryitems();
   }, []);
 
-  const handleAdd = (values) => {
+  console.log(data);
+
+  const handleAdd = async (values) => {
     const newItem = {
       ...values,
       _id: Math.random().toString(36).substr(2, 9),
       lastStockUpdate: new Date().toISOString(),
+      purchaseHistory: [
+        {
+          date: values.purchaseDate,
+          quantityPurchased: values.quantityPurchased,
+          pricePerUnit: values.pricePerUnitPurchase,
+          totalCost: values.totalCost,
+        },
+      ],
+      usageLogs: [
+        {
+          date: values.usageDate,
+          quantityUsed: values.quantityUsed,
+          purpose: values.usagePurpose,
+        },
+      ],
     };
-    setData([...data, newItem]);
-    notification.success({ message: "Item added successfully" });
-    setIsModalVisible(false);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/barInventory/add",
+        newItem
+      );
+      if (res.status == 201) {
+        setData([...data, res.data.data]);
+        notification.success({ message: "Item added successfully" });
+        setIsModalVisible(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const columns = [
@@ -152,35 +112,35 @@ const BarInventory = () => {
     },
     { title: "Status", dataIndex: "status", key: "status" },
     {
-        title: "Purchase Date",
-        key: "purchaseDate",
-        render: (text, record) => record.purchaseHistory[0]?.date
-      },
-      {
-        title: "Quantity Added",
-        key: "quantityAdded",
-        render: (text, record) => record.purchaseHistory[0]?.quantityAdded
-      },
-      {
-        title: "Cost",
-        key: "cost",
-        render: (text, record) => record.purchaseHistory[0]?.cost
-      },
-      {
-        title: "Usage Date",
-        key: "usageDate",
-        render: (text, record) => record.usageLogs[0]?.date
-      },
-      {
-        title: "Quantity Used",
-        key: "quantityUsed",
-        render: (text, record) => record.usageLogs[0]?.quantityUsed
-      },
-      {
-        title: "Usage Purpose",
-        key: "usagePurpose",
-        render: (text, record) => record.usageLogs[0]?.purpose
-      },
+      title: "Purchase Date",
+      key: "purchaseDate",
+      render: (text, record) => record.purchaseHistory[0]?.date,
+    },
+    {
+      title: "Quantity Added",
+      key: "quantityAdded",
+      render: (text, record) => record.purchaseHistory[0]?.quantityAdded,
+    },
+    {
+      title: "Cost",
+      key: "cost",
+      render: (text, record) => record.purchaseHistory[0]?.cost,
+    },
+    {
+      title: "Usage Date",
+      key: "usageDate",
+      render: (text, record) => record.usageLogs[0]?.date,
+    },
+    {
+      title: "Quantity Used",
+      key: "quantityUsed",
+      render: (text, record) => record.usageLogs[0]?.quantityUsed,
+    },
+    {
+      title: "Usage Purpose",
+      key: "usagePurpose",
+      render: (text, record) => record.usageLogs[0]?.purpose,
+    },
   ];
 
   return (

@@ -80,7 +80,7 @@ getAllFacility()
       <div className="main-content">
         <div className="facility-management-content">
           <div className='flex justify-between'>
-            <h2>Facility Management</h2>
+            <h2>Event Management</h2>
             <div className="facility-management-actions">
               <button className="primary-button" onClick={() => setIsModalVisible(true)}>Add Facility</button>
             </div>

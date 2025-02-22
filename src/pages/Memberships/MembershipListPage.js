@@ -47,6 +47,7 @@ const MembershipListPage = () => {
     benefits: AllBenifits,
     price: "",
     membershipday: "",
+    discount:"",
   });
 
   const [errors, setErrors] = useState({});
@@ -85,6 +86,7 @@ const MembershipListPage = () => {
     if (!formData.price || Number(formData.price) <= 0)
       errors.price = "Enter a valid price.";
     if (!formData.type) errors.type = "Select membership type.";
+    if (!formData.discount) errors.type = "Select discount.";
 
     setErrors(errors);
     // alert(Object.keys(errors).length === 0)
@@ -209,6 +211,7 @@ const MembershipListPage = () => {
                   <th>Price</th>
                   <th>Description</th>
                   <th>Benefits</th>
+                  <th>Discount</th>
                   <th>Add On</th>
                   <th>Actions</th> {/* New column */}
                 </tr>
@@ -232,6 +235,7 @@ const MembershipListPage = () => {
                           );
                         })}
                       </td>
+                      <td>{renewal.discount}%</td>
                       <td>{new Date(renewal.createdAt).toLocaleString()}</td>
                       <td>
                         {/* Button to view QR code in a modal */}
@@ -467,6 +471,23 @@ const MembershipListPage = () => {
                       <small className="text-red-500">{errors.price}</small>
                     )}
                   </div>
+                  {/* Discount */}
+                  <div className="form-group">
+                    <label htmlFor="discount">Discount</label>
+                    <input
+                      type="number"
+                      name="discount"
+                      value={formData.discount}
+                      onChange={handleChange}
+                      placeholder="e.g. 10"
+                      min="1"
+                      className={errors.discount ? "error" : ""}
+                    />
+                    {errors.discount && (
+                      <small className="text-red-500">{errors.discount}</small>
+                    )}
+                  </div>
+                  
                   {/* Submit Button */}
                   <button
                     type="button"

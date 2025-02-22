@@ -15,6 +15,7 @@ import RoomBookingsPage from "./pages/Facilities/RoomBookingsPage";
 import EventBookingsPage from "./pages/Facilities/EventBookingsPage";
 import RestaurantOrdersPage from "./pages/Restaurants/RestaurantOrdersPage";
 import FacilityManagementPage from "./pages/Facilities/FacilityManagementPage";
+// import RestaurantManagementPage from "./pages/Restaurants/RestaurantManagementPage";
 import RestaurantManagementPage from "./pages/Restaurants/RestaurantManagementPage";
 import RoomManagementPage from "./pages/Facilities/RoomManagementPage";
 import RestaurantsOverviewPage from "./pages/Restaurants/RestaurantsOverviewPage";
@@ -40,6 +41,8 @@ import Admin from "./pages/Admin/Admin";
 import Benefit from "./pages/Memberships/Benefit";
 import BarInventory from "./pages/Inventory/BarInventory";
 import RestaurantInventory from "./pages/Inventory/RestaurantInventory";
+import BarManagement from "./components/bar/BarManagement";
+import BarManagementPage from "./components/bar/BarManagementPage";
 
 const App = () => {
   return (
@@ -106,11 +109,20 @@ const App = () => {
               path="/restaurants/management"
               element={<RestaurantManagementPage />}
             />
+               <Route
+              path="/bar/management"
+              element={<BarManagementPage />}
+            />
             <Route path="/restaurants/view-menu" element={<ViewMenuPage />} />
+
+            <Route
+              path="/bar/view-menu"
+              element={<BarManagement />}
+            />
 
             <Route path="/bar-inventory" element={<BarInventory />} />
             <Route path="/restaurant-inventory" element={<RestaurantInventory />} />
-            <Route path="/maintainance" element={<Maintenance />} />
+            <Route path="/maintainance-inventory" element={<Inventory />} />
 
             {/* Bar Routes */}
             <Route path="bar" element={<BarOverviewPage />} />

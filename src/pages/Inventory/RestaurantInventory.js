@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Button,
@@ -10,6 +10,7 @@ import {
   notification,
   DatePicker,
 } from "antd";
+import axios from "axios";
 
 const { Option } = Select;
 
@@ -17,31 +18,64 @@ const RestaurantInventory = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleAdd = (values) => {
-    const newItem = {
+  const getAllResturentInventory = async () => {
+    try {
+      let res = await axios.get("http://localhost:8000/api/resturentinventory");
+      if (res.status == 200) {
+        setData(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllResturentInventory();
+  }, []);
+
+  const handleAdd = async (values) => {
+    const formattedValues = {
       ...values,
-      _id: Math.random().toString(36).substr(2, 9),
-      lastStockUpdate: new Date().toISOString(),
+      lastStockUpdate: new Date(), // Auto-set last stock update time
       purchaseHistory: [
         {
-          date: values.purchaseDate.format(),
+          date: values.purchaseDate,
           quantityPurchased: values.quantityPurchased,
-          pricePerUnit: values.pricePerUnit,
+          pricePerUnit: values.pricePerUnitPurchase,
           totalCost: values.totalCost,
-          supplier: values.supplierName,
         },
       ],
       usageLogs: [
         {
-          date: values.usageDate.format(),
+          date: values.usageDate,
           quantityUsed: values.quantityUsed,
           purpose: values.usagePurpose,
         },
       ],
+      supplier: {
+        name: values.supplierName,
+        contact: values.supplierContact,
+        email: values.supplierEmail,
+        address: values.supplierAddress,
+      },
     };
-    setData([...data, newItem]);
-    notification.success({ message: "Item added successfully" });
-    setIsModalVisible(false);
+
+    try {
+      let res = await axios.post(
+        "http://localhost:8000/api/resturentinventory",
+        formattedValues
+      );
+      if (res.status == 201) {
+        getAllResturentInventory();
+        notification.success({ message: "Item added successfully" });
+        setIsModalVisible(false);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        notification.error({ message: error.response.data.error });
+      }
+    }
   };
 
   const columns = [
@@ -61,21 +95,29 @@ const RestaurantInventory = () => {
       dataIndex: "minStockThreshold",
       key: "minStockThreshold",
     },
-    { title: "Supplier Name", dataIndex: "supplier.name", key: "supplierName" },
+    {
+      title: "Supplier Name",
+      dataIndex: "supplier.name",
+      key: "supplierName",
+      render: (text, record) => record?.supplier?.name,
+    },
     {
       title: "Supplier Contact",
       dataIndex: "supplier.contact",
       key: "supplierContact",
+      render: (text, record) => record?.supplier?.contact,
     },
     {
       title: "Supplier Email",
       dataIndex: "supplier.email",
       key: "supplierEmail",
+      render: (text, record) => record?.supplier?.email,
     },
     {
       title: "Supplier Address",
       dataIndex: "supplier.address",
       key: "supplierAddress",
+      render: (text, record) => record?.supplier?.address,
     },
     {
       title: "Last Stock Update",
@@ -124,7 +166,10 @@ const RestaurantInventory = () => {
     <div className="main-content">
       <div className="flex justify-between items-center form-wrapper">
         <h2>Restaurant Inventory Management</h2>
-        <Button className="primary-button" onClick={() => setIsModalVisible(true)}>
+        <Button
+          className="primary-button"
+          onClick={() => setIsModalVisible(true)}
+        >
           Add Item
         </Button>
       </div>
