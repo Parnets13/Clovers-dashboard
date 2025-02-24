@@ -16,8 +16,7 @@ const BarManagement = () => {
     useState(false);
   const [editCategory, setEditCategory] = useState(null);
   const [editSubCategory, setEditSubCategory] = useState(null);
-    const [description, setDescription] = useState("");
-  
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/menuBar")
@@ -293,12 +292,25 @@ const BarManagement = () => {
                               alt=""
                               className="w-40 rounded-md"
                             />
-                            <p className="">
-                              <span className="font-semibold">
-                              
-                              Description: {menuItem.description}
-                              </span>
-                            </p>
+                            <div className="flex flex-col gap-3">
+                              <p className="">
+                                <span className="font-semibold">
+                                  Description: {menuItem.description}
+                                </span>
+                              </p>
+                              <div>
+                                {menuItem.measures &&
+                                  menuItem.measures.length > 0 && (
+                                    <ul>
+                                      {menuItem.measures.map((measure) => (
+                                        <li key={measure._id}>
+                                          {measure.measure} - ₹{measure.price}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                              </div>
+                            </div>
                           </div>
                           <div className="flex items-center gap-1 mt-4 mb-4">
                             <BiEdit
@@ -315,15 +327,6 @@ const BarManagement = () => {
                             />
                           </div>
                         </div>
-                        {menuItem.measures && menuItem.measures.length > 0 && (
-                          <ul>
-                            {menuItem.measures.map((measure) => (
-                              <li key={measure._id}>
-                                {measure.measure} - ₹{measure.price}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
                       </div>
                     ))}
                   </div>

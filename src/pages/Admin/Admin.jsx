@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Table, Card, Calendar, Button, Modal, Form, Input, Select, Badge, List } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Card, Calendar, Button, Modal, Form, Input, Select, Badge, List, message } from "antd";
 import { PlusOutlined, BellOutlined, UserAddOutlined } from "@ant-design/icons";
 import { BiNotification } from "react-icons/bi";
+import axios from "axios";
 
 const { Option } = Select;
 
@@ -18,10 +19,7 @@ const Admin = () => {
     { id: 1, item: 'Membership Fees', amount: 5000, date: '2023-01-01' },
     { id: 2, item: 'Facility Booking Fees', amount: 2000, date: '2023-01-15' }
   ]);
-  const [subAdmins, setSubAdmins] = useState([
-    { id: 1, name: 'Alice Brown', email: 'alice@example.com', role: 'Manager' },
-    { id: 2, name: 'Bob Green', email: 'bob@example.com', role: 'Assistant' }
-  ]);
+  const [subAdmins, setSubAdmins] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newSubAdmin, setNewSubAdmin] = useState({ name: '', email: '', role: '' });
 
@@ -92,7 +90,7 @@ const Admin = () => {
   const subAdminColumns = [
     {
       title: 'Sub Admin ID',
-      dataIndex: 'id',
+      dataIndex: 'subAdminId',
       key: 'id',
     },
     {
@@ -112,12 +110,41 @@ const Admin = () => {
     }
   ];
 
-  const addSubAdmin = () => {
-    const newId = subAdmins.length + 1;
-    const subAdmin = { id: newId, ...newSubAdmin };
-    setSubAdmins([...subAdmins, subAdmin]);
-    setNewSubAdmin({ name: '', email: '', role: '' });
-    setModalVisible(false);
+  const getSubAdmins = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/subAdmins/get")
+      setSubAdmins(res.data)
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => { getSubAdmins() }, [])
+
+
+
+
+  const addSubAdmin = async () => {
+    if (!newSubAdmin.name || !newSubAdmin.email || !newSubAdmin.role) {
+      message.error("Please fill in all fields.");
+      return;
+    }
+    try {
+      const res = await axios.post("http://localhost:8000/api/subAdmins/add", newSubAdmin);
+
+      if (res.status === 201) {
+        message.success("Sub Admin added successfully!");
+        setModalVisible(false);
+        setNewSubAdmin({ name: "", email: "", role: "" }); // Reset form
+        getSubAdmins();
+      } else {
+        message.error("Failed to add Sub Admin.");
+      }
+    } catch (error) {
+      console.error("Error adding Sub Admin:", error);
+      message.error("Something went wrong!");
+    }
   };
 
   const dateCellRender = (date) => {
@@ -138,16 +165,16 @@ const Admin = () => {
     <div className="admin-container main-content" style={{ padding: 20 }}>
 
       <div className="flex justify-between items-center">
-          <h1>Admin Panel</h1>
-          <Button className="primary-button" icon={<PlusOutlined />} onClick={() => setModalVisible(true)} style={{ marginTop: 20 }}>
-            Add Sub Admin
-          </Button>
+        <h1>Admin Panel</h1>
+        <Button className="primary-button" icon={<PlusOutlined />} onClick={() => setModalVisible(true)} style={{ marginTop: 20 }}>
+          Add Sub Admin
+        </Button>
       </div>
 
       <Card title="Sub Admins" style={{ marginBottom: 20 }}>
         <Table dataSource={subAdmins} columns={subAdminColumns} />
       </Card>
-     
+
       <Card title="Membership Data" style={{ marginBottom: 20 }}>
         <Table dataSource={members} columns={memberColumns} />
       </Card>
@@ -155,42 +182,61 @@ const Admin = () => {
       <Card title="Facility Booking Calendar" style={{ marginBottom: 20 }}>
         <Calendar dateCellRender={dateCellRender} />
       </Card>
-      
+
       <Card title="Financial Dashboard Data" style={{ marginBottom: 20 }}>
         <Table dataSource={finances} columns={financeColumns} />
       </Card>
-      
-      <Modal
-        title="Add Sub Admin"
-        visible={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={addSubAdmin}
-      >
+
+      {/* <Modal
+          title="Add Sub Admin"
+          visible={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          onOk={addSubAdmin}
+        >
+          <Form layout="vertical">
+            <Form.Item label="Name">
+              <Input
+                value={newSubAdmin.name}
+                onChange={(e) => setNewSubAdmin({ ...newSubAdmin, name: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item label="Email">
+              <Input
+                value={newSubAdmin.email}
+                onChange={(e) => setNewSubAdmin({ ...newSubAdmin, email: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item label="Role">
+              <Select
+                value={newSubAdmin.role}
+                onChange={(value) => setNewSubAdmin({ ...newSubAdmin, role: value })}
+              >
+                <Option value="Manager">Manager</Option>
+                <Option value="Assistant">Assistant</Option>
+                <Option value="Co-ordinator">Coordinator</Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal> */}
+
+      <Modal title="Add Sub Admin" visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={addSubAdmin}>
         <Form layout="vertical">
           <Form.Item label="Name">
-            <Input 
-              value={newSubAdmin.name}
-              onChange={(e) => setNewSubAdmin({ ...newSubAdmin, name: e.target.value })}
-            />
+            <Input value={newSubAdmin.name} onChange={(e) => setNewSubAdmin({ ...newSubAdmin, name: e.target.value })} />
           </Form.Item>
           <Form.Item label="Email">
-            <Input 
-              value={newSubAdmin.email}
-              onChange={(e) => setNewSubAdmin({ ...newSubAdmin, email: e.target.value })}
-            />
+            <Input value={newSubAdmin.email} onChange={(e) => setNewSubAdmin({ ...newSubAdmin, email: e.target.value })} />
           </Form.Item>
           <Form.Item label="Role">
-            <Select
-              value={newSubAdmin.role}
-              onChange={(value) => setNewSubAdmin({ ...newSubAdmin, role: value })}
-            >
+            <Select value={newSubAdmin.role} onChange={(value) => setNewSubAdmin({ ...newSubAdmin, role: value })}>
               <Option value="Manager">Manager</Option>
               <Option value="Assistant">Assistant</Option>
-              <Option value="Coordinator">Coordinator</Option>
+              <Option value="Co-ordinator">Coordinator</Option>
             </Select>
           </Form.Item>
         </Form>
       </Modal>
+
     </div>
   );
 };

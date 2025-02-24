@@ -11,6 +11,7 @@ import {
   DatePicker,
 } from "antd";
 import axios from "axios";
+import * as XLSX from "xlsx";
 
 const { Option } = Select;
 
@@ -18,6 +19,20 @@ const BarInventory = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [inventory, setInventory] = useState([]);
+  const [searchText, setSearchText] = useState(""); // Search state
+
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Bar Inventory Data");
+    XLSX.writeFile(workbook, "BarInventoryData.xlsx");
+  };
+
+  const filteredData = data.filter((member) =>
+    Object.keys(member).some((key) =>
+      String(member[key]).toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
 
   const getAllInventoryitems = async () => {
     try {
@@ -147,14 +162,24 @@ const BarInventory = () => {
     <div className="main-content">
       <div className="flex justify-between items-center form-wrapper">
         <h2>Bar Inventory Management</h2>
-        <Button
-          className="primary-button"
-          onClick={() => setIsModalVisible(true)}
-        >
-          Add Item
-        </Button>
+        <div className="flex gap-3">
+          <Input
+            placeholder="Search members..."
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 300, marginRight: 10 }}
+          />
+          <Button onClick={handleExport} style={{ marginLeft: 10 }}>
+            Export to Excel
+          </Button>
+          <Button
+            className="primary-button"
+            onClick={() => setIsModalVisible(true)}
+          >
+            Add Item
+          </Button>
+        </div>
       </div>
-      <Table columns={columns} dataSource={data} rowKey="_id" />
+      <Table columns={columns} dataSource={filteredData} rowKey="_id" />
       <Modal
         title="Add New Item"
         visible={isModalVisible}

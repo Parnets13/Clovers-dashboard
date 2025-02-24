@@ -103,6 +103,7 @@ const SportsSubscriptionsTable = ({ data, getAllSubScription, type }) => {
             <th>{type}</th>
             <th>Duration</th>
             <th>Discount</th>
+            <th>Subscription ID</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -115,6 +116,7 @@ const SportsSubscriptionsTable = ({ data, getAllSubScription, type }) => {
               <td>{sub.sport}</td>
               <td>{sub.duration} months</td>
               <td>{sub.discount} %</td>
+              <td>{sub.subscriptionID}</td>
               <td>
                 <div style={{ display: "flex", gap: "5px" }}>
                   <button

@@ -112,6 +112,15 @@ const Sidebar = () => {
           </Menu.Item>
         </Menu.SubMenu>
 
+        <Menu.SubMenu key="reservation" icon={<BuildOutlined />} title="Reservation">
+          <Menu.Item key="reservationr" icon={<MdManageHistory />}>
+            <Link to="/reservation/restaurant">Restaurant Reservation</Link>
+          </Menu.Item>
+          <Menu.Item key="reservationb" icon={<TbBrandBooking />}>
+            <Link to="/reservation/bar">Bar Reservation</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
+
         <Menu.SubMenu key="inventory" icon={<BarsOutlined />} title="Inventory">
           <Menu.Item key="barinventory" icon={<BarsOutlined />}>
             <Link to="/bar-inventory">Bar Inventory</Link>
@@ -119,14 +128,14 @@ const Sidebar = () => {
           <Menu.Item key="restaurantinventory" icon={<BarsOutlined />}>
             <Link to="/restaurant-inventory">Restaurant Inventory</Link>
           </Menu.Item>
-          <Menu.Item key="facilityinventory" icon={<BarsOutlined />}>
+          {/* <Menu.Item key="facilityinventory" icon={<BarsOutlined />}>
             <Link to="/maintainance-inventory">Facility Inventory</Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu.SubMenu>
 
-        <Menu.Item key="maintainance" icon={<BarsOutlined />}>
+        {/* <Menu.Item key="maintainance" icon={<BarsOutlined />}>
           <Link to="/maintainance">maintainance</Link>
-        </Menu.Item>
+        </Menu.Item> */}
 
         <Menu.SubMenu
           key="employee"
@@ -155,6 +164,8 @@ const Sidebar = () => {
             <Link to="/admin">Admin</Link>
           </Menu.Item>
         </Menu.SubMenu>
+
+       
 
         <Menu.Item key="financial" icon={<DollarOutlined />}>
           <Link to="/financial">Financial</Link>

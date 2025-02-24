@@ -43,6 +43,8 @@ import BarInventory from "./pages/Inventory/BarInventory";
 import RestaurantInventory from "./pages/Inventory/RestaurantInventory";
 import BarManagement from "./components/bar/BarManagement";
 import BarManagementPage from "./components/bar/BarManagementPage";
+import RestaurantReservation from "./pages/Reservation/RestaurantReservation";
+import BarReservation from "./pages/Reservation/BarReservation";
 
 const App = () => {
   return (
@@ -109,19 +111,16 @@ const App = () => {
               path="/restaurants/management"
               element={<RestaurantManagementPage />}
             />
-               <Route
-              path="/bar/management"
-              element={<BarManagementPage />}
-            />
+            <Route path="/bar/management" element={<BarManagementPage />} />
             <Route path="/restaurants/view-menu" element={<ViewMenuPage />} />
 
-            <Route
-              path="/bar/view-menu"
-              element={<BarManagement />}
-            />
+            <Route path="/bar/view-menu" element={<BarManagement />} />
 
             <Route path="/bar-inventory" element={<BarInventory />} />
-            <Route path="/restaurant-inventory" element={<RestaurantInventory />} />
+            <Route
+              path="/restaurant-inventory"
+              element={<RestaurantInventory />}
+            />
             <Route path="/maintainance-inventory" element={<Inventory />} />
 
             {/* Bar Routes */}
@@ -145,7 +144,13 @@ const App = () => {
             />
             <Route path="/members" element={<MemberDashboard />} />
             <Route path="/admin" element={<Admin />} />
+            <Route
+              path="/reservation/restaurant"
+              element={<RestaurantReservation />}
+            />
+            <Route path="/reservation/bar" element={<BarReservation />} />
           </Route>
+
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

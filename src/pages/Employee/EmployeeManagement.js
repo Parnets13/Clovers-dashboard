@@ -4,12 +4,21 @@ import Sidebar from "../../components/layout/Sidebar";
 import Topbar from "../../components/layout/Topbar";
 import axios from "axios";
 import { render } from "@testing-library/react";
+import * as XLSX from "xlsx";
 
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentEmployee, setCurrentEmployee] = useState(null);
   const [modalType, setModalType] = useState("");
+  const [searchText, setSearchText] = useState(""); // Search state
+
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(employees);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Employee Data");
+    XLSX.writeFile(workbook, "EmployeeData.xlsx");
+  };
 
   const showAddModal = () => {
     setModalType("add");
@@ -20,20 +29,18 @@ const EmployeeManagement = () => {
     setCurrentEmployee(employee);
     setModalType("edit");
     setIsModalVisible(true);
-    form.setFieldsValue(
-      {
-        name:employee.name ,
-        email:employee.email,
-        address:employee.address,
-        phone:employee.phone ,
-        position:employee.position ,
-        panNo:employee.panNo,
-        aadharNo:employee.aadharNo ,
-        accountNo:employee.accountNo,
-        ifsc:employee.ifsc,
-        bank:employee.bank
-      }
-    ); // ✅ Pre-fill form with previous values
+    form.setFieldsValue({
+      name: employee.name,
+      email: employee.email,
+      address: employee.address,
+      phone: employee.phone,
+      position: employee.position,
+      panNo: employee.panNo,
+      aadharNo: employee.aadharNo,
+      accountNo: employee.accountNo,
+      ifsc: employee.ifsc,
+      bank: employee.bank,
+    }); // ✅ Pre-fill form with previous values
   };
 
   const showDeleteModal = (employee) => {
@@ -95,8 +102,6 @@ const EmployeeManagement = () => {
           message.info("No new files uploaded.");
         }
         message.success("Employee updated successfully!");
-
-      
       }
 
       setIsModalVisible(false);
@@ -251,15 +256,39 @@ const EmployeeManagement = () => {
     },
   ];
 
+  const filteredData = employees.filter((member) =>
+    Object.keys(member).some((key) =>
+      String(member[key]).toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
   return (
     <div className="">
       <div className="dashboard-container">
         <div className="main-content">
           <div className="dashboard-content">
-            <Button className="primary-button w-40" onClick={showAddModal}>
-              Add Employee
-            </Button>
-            <Table dataSource={employees} columns={columns} rowKey="key" />
+            <div className="flex justify-between items-center">
+              <h2>Employee Management</h2>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search members..."
+                  onChange={(e) => setSearchText(e.target.value)}
+                  style={{ width: 300, marginRight: 10 }}
+                />
+                <div className="flex items-center gap-3">
+                  <Button onClick={handleExport} style={{ marginLeft: 10 }}>
+                    Export to Excel
+                  </Button>
+                  <Button
+                    className="primary-button w-40"
+                    onClick={showAddModal}
+                  >
+                    Add Employee
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <Table dataSource={filteredData} columns={columns} rowKey="key" />
 
             <Modal
               title={`${
