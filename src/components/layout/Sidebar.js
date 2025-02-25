@@ -157,6 +157,9 @@ const Sidebar = () => {
           <Menu.Item key="member" icon={<UserOutlined />}>
             <Link to="/members">Members Management</Link>
           </Menu.Item>
+          <Menu.Item key="membershipmember" icon={<UserOutlined />}>
+            <Link to="/memberships/members">Membership Members </Link>
+          </Menu.Item>
         </Menu.SubMenu>
 
         <Menu.SubMenu key="Admin" icon={<UserOutlined />} title="Admin">

@@ -48,6 +48,7 @@ const MembershipListPage = () => {
     price: "",
     membershipday: "",
     discount:"",
+    creditLimit:""
   });
 
   const [errors, setErrors] = useState({});
@@ -87,6 +88,7 @@ const MembershipListPage = () => {
       errors.price = "Enter a valid price.";
     if (!formData.type) errors.type = "Select membership type.";
     if (!formData.discount) errors.type = "Select discount.";
+    if (!formData.creditLimit) errors.type = "Select Credit Limit.";
 
     setErrors(errors);
     // alert(Object.keys(errors).length === 0)
@@ -195,6 +197,7 @@ const MembershipListPage = () => {
                   <th>Description</th>
                   <th>Benefits</th>
                   <th>Discount</th>
+                  <th>Credit Limit</th>
                   <th>Add On</th>
                   <th>Actions</th> {/* New column */}
                 </tr>
@@ -219,6 +222,7 @@ const MembershipListPage = () => {
                         })}
                       </td>
                       <td>{renewal.discount}%</td>
+                      <td>{renewal.creditLimit}</td>
                       <td>{new Date(renewal.createdAt).toLocaleString()}</td>
                       <td>
                         {/* Button to view QR code in a modal */}
@@ -468,6 +472,23 @@ const MembershipListPage = () => {
                     />
                     {errors.discount && (
                       <small className="text-red-500">{errors.discount}</small>
+                    )}
+                  </div>
+
+                    {/* Credit Limit */}
+                    <div className="form-group">
+                    <label htmlFor="creditLimit">Discount</label>
+                    <input
+                      type="number"
+                      name="creditLimit"
+                      value={formData.creditLimit}
+                      onChange={handleChange}
+                      placeholder="e.g. 100000"
+                      min="1"
+                      className={errors.creditLimit ? "error" : ""}
+                    />
+                    {errors.discount && (
+                      <small className="text-red-500">{errors.creditLimit}</small>
                     )}
                   </div>
                   

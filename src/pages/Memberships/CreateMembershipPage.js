@@ -15,6 +15,7 @@ const CreateMembershipPage = () => {
     age: 0,
     type: "",
     discount: "",
+    creditLimit:""
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -275,6 +276,23 @@ const CreateMembershipPage = () => {
                 />
                 {errors.discount && (
                   <small className="error-text">{errors.discount}</small>
+                )}
+              </div>
+
+                 {/* Credit imit */}
+                 <div className="form-group">
+                <label htmlFor="creditLimit">Credit Limit</label>
+                <input
+                  type="number"
+                  name="creditLimit"
+                  value={formData.creditLimit}
+                  onChange={handleChange}
+                  placeholder="e.g. 100000"
+                  min="1"
+                  className={errors.creditLimit ? "error" : ""}
+                />
+                {errors.creditLimit && (
+                  <small className="error-text">{errors.creditLimit}</small>
                 )}
               </div>
 
