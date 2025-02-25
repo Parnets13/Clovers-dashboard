@@ -6,6 +6,8 @@ import "./RestaurantManagementPage.css";
 import { FaEye } from "react-icons/fa";
 import { toast } from "sonner";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import axios from "axios";
+import { message } from "antd";
 
 const capitalizeFirstLetter = (str) => {
   return str
@@ -26,6 +28,8 @@ const RestaurantManagementPage = () => {
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [tableNo, setTableNo] = useState(null);
+  const [seat, setSeat] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/menu")
@@ -107,7 +111,6 @@ const RestaurantManagementPage = () => {
       .catch((err) => console.error("Error adding subcategory:", err));
   };
 
-  
   // const handleAddItem = () => {
   //   const formattedItemName = capitalizeFirstLetter(newItemName.trim());
 
@@ -168,36 +171,35 @@ const RestaurantManagementPage = () => {
   //     .catch((err) => console.error("Error adding item:", err));
   // };
 
-
   const handleAddItem = () => {
     const formattedItemName = capitalizeFirstLetter(newItemName.trim());
-  
+
     if (!selectedCategory || !selectedSubCategory || !formattedItemName) {
       alert("Please select a category, subcategory, and enter item details.");
       return;
     }
-  
+
     if (!newItemPrice && measures.length === 0) {
       alert("Please provide either a single price or multiple measures.");
       return;
     }
-  
+
     if (!selectedImage) {
       alert("Please upload an image.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("name", formattedItemName);
     formData.append("description", description.trim());
     formData.append("image", selectedImage); // Append the image
-  
+
     if (measures.length > 0) {
       formData.append("measures", JSON.stringify(measures)); // Convert measures to JSON string
     } else {
       formData.append("price", parseFloat(newItemPrice)); // Ensure it's a number
     }
-  
+
     fetch(
       `http://localhost:8000/api/menu/${selectedCategory}/subcategory/${selectedSubCategory}/item`,
       {
@@ -212,7 +214,7 @@ const RestaurantManagementPage = () => {
             cat._id === updatedCategory._id ? updatedCategory : cat
           )
         );
-  
+
         setNewItemName("");
         setNewItemPrice("");
         setMeasures([]);
@@ -222,8 +224,32 @@ const RestaurantManagementPage = () => {
       })
       .catch((err) => console.error("Error adding item:", err));
   };
-  
-  
+
+  const handleAddTable = async () => {
+    if (!tableNo.trim() || !seat.trim()) {
+      message.error("Table No and Seat are required");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/restaurant/table/addTable",
+        { tableNo, seat, tableType: "Restaurant" }
+      );
+
+      if (res.status === 201) {
+        message.success("Table added successfully");
+        setTableNo(""); // Clear input fields after successful submission
+        setSeat("");
+      }
+    } catch (error) {
+      message.error("Failed to add table. Please try again.");
+      console.error(error.response?.data || error);
+    }
+  };
+
+
+
   return (
     <div className="restaurant-management-container">
       <div className="main-content">
@@ -384,6 +410,26 @@ const RestaurantManagementPage = () => {
 
               <button className="primary-button" onClick={handleAddItem}>
                 Add Item
+              </button>
+            </div>
+          </div>
+          <div className="form-container">
+            <h3>Add Table</h3>
+            <div className="form-group">
+              <input
+                type="text"
+                value={tableNo}
+                onChange={(e) => setTableNo(e.target.value)}
+                placeholder="Enter Table No"
+              />
+              <input
+                type="text"
+                value={seat}
+                onChange={(e) => setSeat(e.target.value)}
+                placeholder="Enter seat"
+              />
+              <button className="primary-button" onClick={handleAddTable}>
+                Add Subcategory
               </button>
             </div>
           </div>

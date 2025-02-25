@@ -5,6 +5,7 @@ import Topbar from "../../components/layout/Topbar";
 import axios from "axios";
 import { render } from "@testing-library/react";
 import * as XLSX from "xlsx";
+import { Link } from "react-router-dom";
 
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
@@ -153,10 +154,19 @@ const EmployeeManagement = () => {
       key: "slNo",
       render: (text, record, index) => index + 1,
     },
-    {
+  
+      {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      // render: (text, record) => (
+      //   <Link
+      //     to={`/employee/${record._id}`}
+      //     style={{ color: "blue" }}
+      //   >
+      //     {text}
+      //   </Link>
+      // ),
     },
     {
       title: "Phone ",

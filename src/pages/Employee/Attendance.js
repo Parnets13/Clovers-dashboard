@@ -69,7 +69,7 @@ const Attendance = () => {
       title: "Employee ID",
       dataIndex: ["employeeId"],
       key: "employeeId",
-      render: (employeeId) => employeeId || "N/A",
+      render: (employeeId) => (employeeId ? employeeId.employeeId : "N/A"),
     },
     // {
     //   title: "Employee Name",

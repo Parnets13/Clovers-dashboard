@@ -164,6 +164,23 @@ const ViewMenuPage = () => {
     }
   };
 
+  const [table, setTable] = useState([]);
+
+  const getTable = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8000/api/restaurant/table/getAllTables"
+      );
+      setTable(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTable();
+  }, []);
+
   return (
     <div className="view-menu-container">
       <div className="main-content">
@@ -189,6 +206,9 @@ const ViewMenuPage = () => {
                 onClick={() => setBtn("MenuItems")}
               >
                 Menu Items
+              </button>
+              <button className="menu-button" onClick={() => setBtn("Table")}>
+                Table
               </button>
             </div>
 
@@ -387,6 +407,42 @@ const ViewMenuPage = () => {
                   ))}
                 </div>
               ))}
+            </div>
+          )}
+
+          {btn === "Table" && (
+            <div>
+              <table className="menu-table">
+                <thead>
+                  <tr>
+                    <th>Sl No</th>
+                    <th>Table</th>
+                    <th>Seat</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {table.map((item, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{item.tableNo}</td>
+                      <td>{item.seat}</td>
+                      <td className="flex justify-center items-center gap-2 mt-2">
+                        <BiEdit
+                          className="text-blue-500"
+                          onClick={() => handleEditCategoryClick(item)}
+                        />
+                        <FiDelete
+                          className="text-red-500"
+                          onClick={() => {
+                            handleCategoryDelete(item._id);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 

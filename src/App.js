@@ -45,6 +45,7 @@ import BarManagement from "./components/bar/BarManagement";
 import BarManagementPage from "./components/bar/BarManagementPage";
 import RestaurantReservation from "./pages/Reservation/RestaurantReservation";
 import BarReservation from "./pages/Reservation/BarReservation";
+import EmployeesById from "./pages/Employee/EmployeesById";
 
 const App = () => {
   return (
@@ -135,6 +136,7 @@ const App = () => {
               path="/employee-management"
               element={<EmployeeManagement />}
             />
+            <Route path="/employee/:empId" element={<EmployeesById />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/payroll" element={<Payroll />} />
             <Route path="/financial" element={<FeesAndCharges />} />
