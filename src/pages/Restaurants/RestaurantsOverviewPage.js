@@ -4,6 +4,7 @@ import Topbar from '../../components/layout/Topbar';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RestaurantsOverviewPage.css';
+import moment from 'moment';
 
 const RestaurantsOverviewPage = () => {
     const navigate = useNavigate();
@@ -43,28 +44,22 @@ const RestaurantsOverviewPage = () => {
         fetchMenuCategories();
     }, []);
 
+    const fetchLiveOrders = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/live-orders/getlivebycat/resturant');
+            const orders = response.data.success;
+
+            setFilteredOrders(orders);
+            setOrdersData(orders); // Keep original orders if needed
+        } catch (err) {
+            setError('Failed to fetch live orders. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Fetch live orders and filter by Veg and Non-Veg categories
     useEffect(() => {
-        const fetchLiveOrders = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/live-orders');
-                const orders = response.data;
-
-                // Filter orders containing veg or non-veg items
-                const filtered = orders.filter((order) =>
-                    order.items.some((item) =>
-                        ["veg", "non-veg"].includes(categoryMapping[item.name])
-                    )
-                );
-
-                setFilteredOrders(filtered);
-                setOrdersData(orders); // Keep original orders if needed
-            } catch (err) {
-                setError('Failed to fetch live orders. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
 
         if (Object.keys(categoryMapping).length > 0) {
             fetchLiveOrders();
@@ -73,69 +68,26 @@ const RestaurantsOverviewPage = () => {
 
     const handleStatusChange = async (id, newStatus) => {
         const orderToUpdate = ordersData.find((order) => order._id === id);
-
         if (!orderToUpdate) {
             console.error('Order not found');
             return;
         }
 
-        if (newStatus === 'Served') {
-            try {
-                // Separate food and alcohol items
-                const foodItems = orderToUpdate.items.filter(
-                    (item) => categoryMapping[item.name] === 'veg' || categoryMapping[item.name] === 'non-veg'
-                );
-                const alcoholItems = orderToUpdate.items.filter(
-                    (item) => categoryMapping[item.name] === 'alcohol'
-                );
 
-                // Save food items to `/orders`
-                if (foodItems.length > 0) {
-                    await axios.post('http://localhost:8000/api/orders', {
-                        ...orderToUpdate,
-                        items: foodItems,
-                    });
-                }
-
-                if (alcoholItems.length > 0) {
-                    // Update `/live-orders` to retain alcohol items
-                    await axios.patch(`http://localhost:8000/api/live-orders/${id}`, {
-                        items: alcoholItems,
-                    });
-                } else {
-                    // If no alcohol items remain, delete the entire order
-                    await axios.delete(`http://localhost:8000/api/live-orders/${id}`);
-                }
-
-                // Update the frontend state
-                setOrdersData((prev) =>
-                    prev.map((order) =>
-                        order._id === id ? { ...order, items: alcoholItems } : order
-                    ).filter((order) => order.items.length > 0)
-                );
-            } catch (err) {
-                console.error('Failed to update order:', err);
-                setError('Failed to update order. Please try again.');
-            }
-        } else {
-            try {
-                // Update status for the entire order
-                await axios.patch(`http://localhost:8000/api/live-orders/${id}`, { status: newStatus });
-                setOrdersData((prev) =>
-                    prev.map((order) =>
-                        order._id === id ? { ...order, status: newStatus } : order
-                    )
-                );
-            } catch (err) {
-                console.error('Failed to update order status:', err);
-                setError('Failed to update order status. Please try again.');
-            }
+        try {
+            // Update status for the entire order
+            await axios.patch(`http://localhost:8000/api/live-orders/${id}`, { status: newStatus });
+            fetchLiveOrders()
+        } catch (err) {
+            console.error('Failed to update order status:', err);
+            setError('Failed to update order status. Please try again.');
         }
-    };
+    }
+
 
     if (loading) {
         return <div className="loading"> <div className='flex justify-center h-screen w-screen items-center'>
-       
+
             <div class="flex-col gap-4 w-full flex items-center justify-center">
                 <div
                     class="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-[#c5a48a] rounded-full"
@@ -155,9 +107,9 @@ const RestaurantsOverviewPage = () => {
 
     return (
         <div className="restaurants-overview-container">
-         
+
             <div className="main-content">
-           
+
                 <div className="restaurants-buttons">
                     <button className="primary-button" onClick={goToRestaurantOrders}>
                         Restaurant Orders
@@ -174,29 +126,44 @@ const RestaurantsOverviewPage = () => {
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Table No</th>
+                                    <th>Member_Name</th>
+                                    <th>Discount</th>
+                                    <th>Pay Method</th>
+                                    <th>Amount</th>
                                     <th>Items</th>
-                                    <th>Status</th>
+                                    <th>Booking Date</th>
+                                    {/* <th>Status</th> */}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredOrders.map((order) => (
+                                {filteredOrders?.map((order) => (
                                     <tr key={order._id}>
-                                        <td>{order._id}</td>
+                                        <td>{order.orderId}</td>
                                         <td>{order.table}</td>
-                                        <td>
+                                        <td>{order?.userId?.Member_Name}</td>
+                                        <td>{order.discount?.toFixed(2)}</td>
+                                      
+                                        <td>{order.paymentMethod}</td>
+                                        <td>{order.total?.toFixed(2)}</td>
+                                        <td >
                                             <ul className="items-list">
-                                                {order.items
-                                                    .filter((item) =>
-                                                        ["veg", "non-veg"].includes(categoryMapping[item.name])
-                                                    )
-                                                    .map((item) => (
+                                                {order?.items?.map((item) => (
                                                         <li key={item._id}>
-                                                            {item.name} - {item.quantity}x (₹{item.price})
+                                                            <div className='flex gap-2'>
+                                                                <img src={ `http://192.168.1.79:8000/menu/${item.image}` } style={{
+                                                                    height:"70px",borderRadius:"10px"
+                                                                }}/>
+                                                                <p> {item.name} - {item.quantity}x (₹{item.price})</p>
+                                                            </div>
+                                                           
                                                         </li>
                                                     ))}
                                             </ul>
                                         </td>
+
+                                       <td >{moment(order?.date).format("lll")}</td>
+
                                         <td>
                                             <select
                                                 value={order.status || 'Pending'}
@@ -208,11 +175,11 @@ const RestaurantsOverviewPage = () => {
                                                 <option value="Pending">Pending</option>
                                             </select>
                                         </td>
-                                        <td>
+                                        {/* <td>
                                             <span className={`status-badge ${order.status?.toLowerCase() || 'pending'}`}>
                                                 {order.status || 'Pending'}
                                             </span>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 ))}
                             </tbody>

@@ -42,7 +42,7 @@
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  /* font-size: 0.95rem; */
 }
 
 .orders-table thead tr {

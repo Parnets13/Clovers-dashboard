@@ -99,7 +99,7 @@ const Sidebar = () => {
             <Link to="/restaurants/view-menu">Menu Management</Link>
           </Menu.Item>
           <Menu.Item key="restub" icon={<TbBrandBooking />}>
-            <Link to="/restaurants/orders">Bookings</Link>
+            <Link to="/restaurants">Bookings</Link>
           </Menu.Item>
         </Menu.SubMenu>
 

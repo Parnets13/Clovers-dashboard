@@ -3,6 +3,7 @@ import Sidebar from '../../components/layout/Sidebar';
 import Topbar from '../../components/layout/Topbar';
 import axios from 'axios';
 import './RestaurantOrdersPage.css';
+import moment from 'moment';
 
 const RestaurantOrdersPage = () => {
   const [ordersData, setOrdersData] = useState([]);
@@ -45,11 +46,8 @@ const RestaurantOrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/orders');
-        const formattedOrders = response.data.map((order) => ({
-          ...order,
-          formattedDate: new Date(order.date || order.createdAt).toISOString().split('T')[0], // Format to YYYY-MM-DD
-        }));
+        const response = await axios.get('http://localhost:8000/api/live-orders/getbycat/resturant');
+        const formattedOrders = response.data.success
 
         setOrdersData(formattedOrders);
       } catch (err) {
@@ -109,7 +107,7 @@ const RestaurantOrdersPage = () => {
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="error text-center">{error}</div>;
   }
 
   return (
@@ -119,7 +117,7 @@ const RestaurantOrdersPage = () => {
 
         <div className="restaurant-orders-content">
           <div className="orders-header">
-            <h2>Restaurant Orders</h2>
+            <h2>Restaurant Orders</h2> 
             <div className="date-filter">
               <label htmlFor="date-picker">Filter by Date:</label>
               <input
@@ -143,40 +141,69 @@ const RestaurantOrdersPage = () => {
           </div>
 
           <div className="orders-table-container">
-            <table className="orders-table">
-              <thead>
-                <tr>
-                  <th>Sl No</th>
-                  <th>Order ID</th>
-                  <th>Table No</th>
-                  <th>Date</th>
-                  <th>Items</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order, index) => (
-                  <tr key={order._id}>
-                    <td>{index + 1}</td>
-                    <td>{order._id}</td>
-                    <td>{order.table}</td>
-                    <td>{order.formattedDate || 'N/A'}</td>
-                    <td>
-                      <ul className="items-list">
-                        {order.items
-                          .filter((item) =>
-                            ['veg', 'non-veg'].includes(categoryMapping[item.name])
-                          )
-                          .map((item, index) => (
-                            <li key={index}>
-                              {item.name} - {item.quantity}x (₹{item.price})
-                            </li>
-                          ))}
-                      </ul>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <table className="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Table No</th>
+                                    <th>Member_Name</th>
+                                    <th>Discount</th>
+                                    <th>Pay Method</th>
+                                    <th>Amount</th>
+
+                                    <th>Items</th>
+                               <th>Booking Date</th>
+                                    <th>Status</th>
+                                    {/* <th>Actions</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredOrders?.map((order) => (
+                                    <tr key={order._id}>
+                                        <td>{order.orderId}</td>
+                                        <td>{order.table}</td>
+                                        <td>{order?.userId?.Member_Name}</td>
+                                        <td>{order.discount?.toFixed(2)}</td>
+                                      
+                                        <td>{order.paymentMethod}</td>
+                                        <td>{order.total?.toFixed(2)}</td>
+                                        <td>
+                                            <ul className="items-list">
+                                                {order?.items?.map((item) => (
+                                                        <li key={item._id}>
+                                                            <div className='flex gap-2'>
+                                                                <img src={ `http://192.168.1.79:8000/menu/${item.image}` } style={{
+                                                                    height:"70px",borderRadius:"10px"
+                                                                }}/>
+                                                                <p> {item.name} - {item.quantity}x (₹{item.price})</p>
+                                                            </div>
+                                                           
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </td>
+                                        <td>{moment(order?.date).format("lll")}</td>
+{/*                                       
+                                        <td>
+                                            <select
+                                                value={order.status || 'Pending'}
+                                                onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                                                className="status-dropdown"
+                                            >
+                                                <option value="Preparing">Preparing</option>
+                                                <option value="Served">Served</option>
+                                                <option value="Pending">Pending</option>
+                                            </select>
+                                        </td> */}
+                                        <td>
+                                            <span className={`status-badge ${order.status?.toLowerCase() || 'pending'}`}>
+                                                {order.status || 'Pending'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
           </div>
         </div>
       </div>
