@@ -11,17 +11,17 @@ const FacilityManagementPage = () => {
 
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
   const [form] = Form.useForm(); // Ant Design form instance
-  const [AllFacility,setAllFacility]=useState([]);
+  const [AllFacility, setAllFacility] = useState([]);
 
-  const getAllFacility=async()=>{
+  const getAllFacility = async () => {
     try {
-         let res = await axios.get('http://localhost:8000/api/facility');
-         if(res.status==200){
-          setAllFacility(res.data.success)
-         }
+      let res = await axios.get('http://localhost:8000/api/facility');
+      if (res.status == 200) {
+        setAllFacility(res.data.success)
+      }
     } catch (error) {
       console.log(error);
-      
+
     }
   }
   // Close modal
@@ -71,9 +71,9 @@ const FacilityManagementPage = () => {
 
 
 
-useEffect(()=>{
-getAllFacility()
-},[]);
+  useEffect(() => {
+    getAllFacility()
+  }, []);
 
   return (
     <div className="facility-management-container">
@@ -91,7 +91,7 @@ getAllFacility()
 
 
       <Modal
-        title="Add Facility "
+        title="Add Event Facility "
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -120,7 +120,24 @@ getAllFacility()
             <Input placeholder="Enter facility type" />
           </Form.Item>
 
-          {/* Status */}
+   
+          
+          {/* capacity */}
+          <Form.Item
+            name="capacity"
+            label="Capacity"
+            rules={[{ required: true, message: "Please enter a capacity!" }]}
+          >
+            <InputNumber min={1} placeholder="Enter feature capacity" style={{ width: '100%' }} />
+          </Form.Item>
+          {/* capacity */}
+          <Form.Item
+            name="price"
+            label="Price"
+            rules={[{ required: true, message: "Please enter a price!" }]}
+          >
+            <InputNumber min={1} placeholder="Enter feature price" style={{ width: '100%' }} />
+          </Form.Item>
           <Form.Item
             name="status"
             label="Status"
@@ -131,15 +148,6 @@ getAllFacility()
               <Option value="maintenance">maintenance</Option>
               <Option value="inactive">Inactive</Option>
             </Select>
-          </Form.Item>
-
-          {/* capacity */}
-          <Form.Item
-            name="capacity"
-            label="Capacity"
-            rules={[{ required: true, message: "Please enter a capacity!" }]}
-          >
-            <InputNumber min={1} placeholder="Enter feature capacity" style={{ width: '100%' }}/>
           </Form.Item>
 
         </Form>

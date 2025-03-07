@@ -83,7 +83,7 @@ const FacilityBookingTable = ({ data, getAllBooking, members, AllFacility }) => 
           {data?.map((b, i) => (
             <tr key={b._id}>
               <td>{i + 1}.</td>
-              <td>{b?.memberId?.name}</td>
+              <td>{b?.memberId?.Member_Name}</td>
               <td>{b?.facilityId?.name}</td>
               <td>{moment(b.bookingDate).format("DD-MM-YYYY")}</td>
               <td>{b?.startTime} to {b?.endTime}</td>

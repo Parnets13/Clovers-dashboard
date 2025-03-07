@@ -120,7 +120,7 @@ const RoomBookingTable = ({ data, getAllBooking }) => {
         <tbody>
           {data?.map(r => (
             <tr key={r._id}>
-              <td>{r?.memberId?.name}</td>
+              <td>{r?.memberId?.Member_Name}</td>
               <td>{r?.roomName}</td>
               <td>{r?.roomId?.roomNumber}</td>
               <td>{moment(r.checkInDate).format("DD/MM/YYYY")} {r.checkInTime}</td>
@@ -191,7 +191,7 @@ const RoomBookingTable = ({ data, getAllBooking }) => {
         <Descriptions column={1} bordered>
           {/* Member */}
           <Descriptions.Item label="Member">
-            {viewData?.memberId?.name || "N/A"}
+            {viewData?.memberId?.Member_Name || "N/A"}
           </Descriptions.Item>
 
           {/* Facility */}
@@ -311,7 +311,7 @@ const RoomBookingTable = ({ data, getAllBooking }) => {
             <Select placeholder="Select a member">
               {members?.map((member) => (
                 <Option key={member._id} value={member._id}>
-                  {member.name}
+                  {member.Member_Name}
                 </Option>
               ))}
             </Select>

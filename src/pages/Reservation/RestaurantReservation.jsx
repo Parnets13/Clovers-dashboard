@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, Table, message, Select, DatePicker, TimePicker } from 'antd';
 import axios from 'axios';
 import * as XLSX from "xlsx";
+import moment from 'moment';
 
 
 
@@ -116,25 +117,50 @@ const RestaurantReservation = () => {
         { title: 'Member Name', dataIndex: 'memberName', key: 'memberName' },
         { title: 'Phone', dataIndex: 'memberPhone', key: 'memberPhone' },
         { title: 'Email', dataIndex: 'memberEmail', key: 'memberEmail' },
-        { title: 'Reservation Date', dataIndex: 'reservationDate', key: 'reservationDate' },
+  {
+      title: "Reservation Date",
+      dataIndex: "reservationDate",
+      render: (date) => <p>{moment(date).format("DD/MM/YYYY")}</p>
+    },
         { title: 'Reservation Time', dataIndex: 'reservationTime', key: 'reservationTime' },
         { title: 'Number of Guests', dataIndex: 'numberOfGuests', key: 'numberOfGuests' },
         { title: 'Table Number', dataIndex: 'tableNumber', key: 'tableNumber' },
+        { title: "Items", dataIndex: "preOrder",
+            render: (order) => (
+              <ul className="items-list">
+                {order?.map((item) => (
+                  <li key={item._id}>
+                    <div className="flex gap-2">
+                      {item?.image && <img
+                        src={`http://192.168.1.79:8000/menu/${item?.image}`}
+                        style={{ height: "70px", borderRadius: "10px" }}
+                      />}
+                     
+                        <p> {item.foodName} {item.measure} - {item.quantity}x (₹{item.price})</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )
+            
+           },
         { title: 'Status', dataIndex: 'status', key: 'status' },
         { title: 'Total Amount', dataIndex: 'totalAmount', key: 'totalAmount' },
         { title: 'Payment Status', dataIndex: 'paymentStatus', key: 'paymentStatus' },
-        { title: 'Referred By', dataIndex: 'referedBy', key: 'referedBy' },
-        { title: 'Referred By ID', dataIndex: 'referedById', key: 'referedById' },
-        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
+        // { title: 'Referred By', dataIndex: 'referedBy', key: 'referedBy' },
+        // { title: 'Referred By ID', dataIndex: 'referedById', key: 'referedById' },
+        { title: "Created At", dataIndex: "createdAt",render:(item)=>(
+             <p>{moment(item).format("lll")}</p>
+           ) },
     ];
 
 
     const getAllReservations = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/restaurant/reservation/get');
+            const response = await axios.get('http://localhost:8000/api/restaurant/reservation/bycategory/Restaurant');
             console.log(response.data.data)
            
-            setData(response?.data?.data?.filter(reservation => reservation.reservationType === 'Restaurant'))
+            setData(response?.data?.data)
         } catch (error) {
             console.error('Error fetching reservations:', error);
         }
