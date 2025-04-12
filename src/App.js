@@ -47,6 +47,7 @@ import RestaurantReservation from "./pages/Reservation/RestaurantReservation";
 import BarReservation from "./pages/Reservation/BarReservation";
 import EmployeesById from "./pages/Employee/EmployeesById";
 import Members from "./pages/Memberships/Members";
+import SportBooking from "./pages/Facilities/SportBooking";
 
 const App = () => {
   return (
@@ -63,6 +64,11 @@ const App = () => {
             <Route path="/memberships/benefits" element={<Benefit />} />
 
             <Route
+              path="/memberships/wallet"
+              element={<Members />}
+            
+            />
+              <Route
               path="/memberships/create"
               element={<CreateMembershipPage />}
             />
@@ -86,7 +92,7 @@ const App = () => {
             />
             <Route
               path="/subscriptions/facilities"
-              element={<FacilitySubscriptionsPage />}
+              element={<SportBooking />}
             />
 
             {/* Facilities Routes */}

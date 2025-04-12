@@ -7,6 +7,11 @@ import Sidebar from '../components/layout/Sidebar';
 const { Content } = Layout;
 
 const AppLayout = () => {
+  let token=localStorage.getItem("token");
+  if(!token){
+    window.location.assign("/login");
+    return;
+  }else
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar />

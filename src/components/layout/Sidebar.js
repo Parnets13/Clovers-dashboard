@@ -34,8 +34,17 @@ import {
 } from "react-icons/md";
 import { TbBrandBooking } from "react-icons/tb";
 import { IoRestaurantSharp } from "react-icons/io5";
+import { BiPowerOff } from "react-icons/bi";
 
 const Sidebar = () => {
+  const logout = async () => {
+    localStorage.removeItem("token");
+    toast.success("Successfully logout!");
+    setTimeout(() => {
+      window.location.assign("/login")
+    }, 100)
+  }
+
   return (
     <div className="sidebar">
       <Toaster />
@@ -65,7 +74,7 @@ const Sidebar = () => {
             <Link to="/subscriptions/sports">Sports Subscriptions</Link>
           </Menu.Item>
           <Menu.Item key="facilitysub" icon={<FaCircleNodes />}>
-            <Link to="/subscriptions/facilities">Facility Subscriptions</Link>
+            <Link to="/subscriptions/facilities">Booking Subscriptions</Link>
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu
@@ -160,6 +169,9 @@ const Sidebar = () => {
           <Menu.Item key="membershipmember" icon={<UserOutlined />}>
             <Link to="/memberships/members">Membership Members </Link>
           </Menu.Item>
+          {/* <Menu.Item key="walletmanagement" icon={<UserOutlined />}>
+            <Link to="/memberships/wallet">Wallet Management </Link>
+          </Menu.Item> */}
         </Menu.SubMenu>
 
         <Menu.SubMenu key="Admin" icon={<UserOutlined />} title="Admin">
@@ -168,10 +180,13 @@ const Sidebar = () => {
           </Menu.Item>
         </Menu.SubMenu>
 
-       
+
 
         <Menu.Item key="financial" icon={<DollarOutlined />}>
           <Link to="/financial">Financial</Link>
+        </Menu.Item>
+        <Menu.Item key="logut" icon={<BiPowerOff />} onClick={() => logout()}>
+          <Link >Log Out</Link>
         </Menu.Item>
       </Menu>
     </div>

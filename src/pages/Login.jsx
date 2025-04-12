@@ -2,12 +2,31 @@ import React from "react";
 import { Layout, Form, Input, Button, Typography, Card } from "antd";
 import { UserOutlined, LockOutlined, CoffeeOutlined, KeyOutlined } from "@ant-design/icons";
 import logo from '../assets/logo.png'
+import axios from "axios";
+import { toast } from "sonner";
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 
 const Login = () => {
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    try {
+      let res = await axios.post("http://localhost:8000/api/admin/login", values);
+      if (res.status == 200) {
+        toast.success("Successfully login");
+        localStorage.setItem("token", res.data.token)
+        setTimeout(()=>{
+          window.location.assign("/")
+        },300)
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error)
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+
     console.log("Success:", values);
   };
 
@@ -16,9 +35,9 @@ const Login = () => {
       {/* Sidebar */}
       <Sider width={400} style={{ background: "#1A1A2E", padding: "40px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <div className="flex justify-center">
-        <img src={logo} alt="Bar & Restaurant Logo" style={{ width: 250, marginBottom: 20 ,textAlign:"center"}} />
+          <img src={logo} alt="Bar & Restaurant Logo" style={{ width: 250, marginBottom: 20, textAlign: "center" }} />
         </div>
-       
+
         <Title level={2} style={{ color: "#fff", textAlign: "center" }}>
           <CoffeeOutlined style={{ marginRight: 10 }} /> Welcome to Bar & Restaurant
         </Title>
@@ -26,7 +45,7 @@ const Login = () => {
           Enjoy the best dining experience with us!
         </Text>
       </Sider>
-      
+
       {/* Login Form Section */}
       <Layout>
         <Content style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#F5F5F5", padding: "20px" }}>
